@@ -21,7 +21,6 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import "../App.css";
-import {TypeObject} from "@mui/material/styles/createPalette";
 const multiplier: mult = {
   annually: 1 / 12,
   monthly: 1,
@@ -35,7 +34,7 @@ interface mult {
   daily: number;
 }
 
-export const RedundancyPayCalculator = (): JSX.Element => {
+export const NationalInsurance = (): JSX.Element => {
   const result = {
     employer: 0,
     employee: 0,
@@ -69,7 +68,7 @@ export const RedundancyPayCalculator = (): JSX.Element => {
       const taxable = Math.max(Math.min(end, pay) - start, 0);
       tot += taxable * data[i].categories[category as keyof Mapping];
     }
-    return tot;
+    return roundUpAll(tot);
   };
   return (
     <Paper
@@ -103,7 +102,9 @@ export const RedundancyPayCalculator = (): JSX.Element => {
         />
       </FormGroup>{" "}
       <FormControl style={{marginTop: "10px"}}>
-        <InputLabel>Pay period</InputLabel>
+        <InputLabel style={{fontWeight: "bold", color: "black"}}>
+          Pay period
+        </InputLabel>
         <Select
           label="Pay period"
           style={{background: "white"}}
@@ -124,10 +125,13 @@ export const RedundancyPayCalculator = (): JSX.Element => {
         label="Enter pay"
         type="number"
         style={{marginTop: "15px", background: "white"}}
-        InputLabelProps={{shrink: true}}
+        InputLabelProps={{
+          shrink: true,
+          style: {color: "black", fontWeight: "bold"},
+        }}
         InputProps={{
           startAdornment: <InputAdornment position="start">£</InputAdornment>,
-          inputProps: {min: 0, max: 100},
+          inputProps: {min: 0},
         }}
         onChange={e => {
           inputState.pay = parseFloat(e.target.value);
@@ -136,10 +140,12 @@ export const RedundancyPayCalculator = (): JSX.Element => {
         value={inputState.pay}
       />
       <FormControl style={{marginTop: "15px"}}>
-        <InputLabel>Select NICs Category</InputLabel>
+        <InputLabel style={{color: "black", fontWeight: "bold"}}>
+          Select NICs Category
+        </InputLabel>
         <Select
           inputProps={{}}
-          input={<OutlinedInput label="Select NICs Category" />}
+          input={<OutlinedInput label="Select NICs Category  " />}
           value={inputState.category}
           style={{background: "white"}}
           onChange={e => {
@@ -170,15 +176,33 @@ export const RedundancyPayCalculator = (): JSX.Element => {
   );
 };
 const currencyFormat = (num: number): string => {
-  const ret = num.toFixed(3);
-  let digit = null;
-  const split = ret.split(".") as Array<string>;
-  if (split[1].charAt(2) !== "0") {
-    digit = parseInt(split[1].charAt(1)) + 1;
-    const str = parseFloat(split[0] + "." + split[1].charAt(0) + digit);
+  return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+};
 
-    return str.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+export const roundUpAll = (original: number): number => {
+  const tempOr = original.toString();
+
+  let value;
+  if (tempOr.indexOf(".") === -1) return original;
+  else {
+    value = tempOr + "00";
+  }
+  let up = false;
+  for (let i = value.indexOf(".") + 3; i < value.length; i++) {
+    const d = value.charAt(i);
+    if (d !== "0") {
+      up = true;
+      break;
+    }
+  }
+  const digits = value.split(".")[1];
+  if (up && digits[1] === "9" && digits[0] === "9") {
+    return Math.round(original);
+  } else if (up && digits[1] === "9") {
+    return parseFloat(value.split(".")[0] + "." + (parseInt(digits[0]) + 1).toString());
+  } else if (up) {
+    return parseFloat(value.split(".")[0] +"." + digits[0] +  (parseInt(digits[1]) + 1).toString());
   } else {
-    return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    return original;
   }
 };
