@@ -22,14 +22,13 @@ import {
   InputLabel,
   InputAdornment,
   OutlinedInput,
-  Fade,
+  Box,Fade
+
   
 } from "@mui/material";
 import "../App.css";
-import { BlockLike } from "typescript";
-import { callbackify } from "util";
-import { Logger } from "apify/build/utils_log";
-import { Box } from "@mui/system";
+
+
 const multiplier: mult = {
   annually: 1 / 12,
   monthly: 1,
@@ -273,43 +272,52 @@ export const NationalInsurance = (): JSX.Element => {
         </Select>
       </FormControl>
       </Box>
+      <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
       <p style={{textDecoration: "none", fontWeight: "bold"}}>
         Employee NI deduction: £{currencyFormat(resultState.employee)}
-    
+       
         
       </p>
-      <Box>
+    <p style={{textDecoration: "none", fontWeight: "bold"}}>
+    Employer NI contribution: £{currencyFormat(resultState.employer)}
+    </p>
+
+    </Box>
+      
+      <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
+  
+      <Box style={{textAlign:"center",width:"100%"}}>       
       <FormLabel style={{ color: "black",marginLeft:"10px",textDecoration:"none"}}>
       Display breakdown
         </FormLabel>
         <Switch
           onChange={e => {
             setDisplayBreakdown(e.target.checked)
+            console.log("hello2")
+            
           }}
           value={displayBreakdown}
         />
-         <Box style={{width:"100%"}}>
-        <OutputTable style={{display:displayBreakdown?"block":"none"}} result={resultState.empTable}/>
         </Box>
-    </Box>
-      <p style={{textDecoration: "none", fontWeight: "bold"}}>
-        Employer NI contribution: £{currencyFormat(resultState.employer)}
-       
-      </p>
+
+        </Box>
+        <Fade in={displayBreakdown} unmountOnExit>
+        <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between",marginTop:"20px"}}>
+        <Box>
+         {/* <Box style={{display:displayBreakdown?"block":"none"}}> */}
+        <OutputTable  result={resultState.empTable}/>
+        </Box>
+   
+     
       <Box>
-      <FormLabel style={{ color: "black",marginLeft:"10px",textDecoration:"none"}}>
-      Display breakdown
-        </FormLabel>
-        <Switch
-          onChange={e => {
-            setDisplayBreakdown2(e.target.checked)
-          }}
-          value={displayBreakdown2}
-        />
-        <Box style={{width:"100%"}}>
-        <OutputTable style={{display:displayBreakdown2?"block":"none"}} result={resultState.bossTable}/>
+     
+        <Box >
+        <OutputTable  result={resultState.bossTable}/>
+        </Box>      
+        </Box>    
         </Box>
-          </Box>
+        </Fade>
+        
    
     
     </Paper>

@@ -36,7 +36,7 @@ export const OutputTable = ({result}:any): JSX.Element => {
               <TableCell align="left">{typeof row.incomeBand==="string" ? row.incomeBand: ((row!.incomeBand as {start:number;end:number}).start!).toString()+" < x < "+ (row!.incomeBand as  {start:number;end:number}).end!.toString() as any }</TableCell>
               <TableCell align="left">{currencyFormat(roundUpAll(row!.income!)) as string}</TableCell>
               <TableCell align="left">{perc(row!.rate as number) as string}</TableCell>
-              <TableCell align="left">{currencyFormat(roundUpAll(row!.contribution!)) as string}</TableCell>
+              <TableCell align="left">{currencyFormat(roundUpAll(row!.contribution as number)) as string}</TableCell>
              
             </TableRow>
           ))}
