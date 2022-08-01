@@ -289,7 +289,7 @@ export const NationalInsurance = (): JSX.Element => {
           value={displayBreakdown}
         />
          <Box style={{width:"100%"}}>
-        {displayBreakdown  ? <OutputTable result={resultState.empTable}/>:<></>}
+        <OutputTable style={{display:displayBreakdown?"block":"none"}} result={resultState.empTable}/>
         </Box>
     </Box>
       <p style={{textDecoration: "none", fontWeight: "bold"}}>
@@ -307,7 +307,7 @@ export const NationalInsurance = (): JSX.Element => {
           value={displayBreakdown2}
         />
         <Box style={{width:"100%"}}>
-        {displayBreakdown2  ? <OutputTable result={resultState.bossTable}/>:<></>}
+        <OutputTable style={{display:displayBreakdown2?"block":"none"}} result={resultState.bossTable}/>
         </Box>
           </Box>
    
