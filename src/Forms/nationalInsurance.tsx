@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {SetStateAction, useEffect, useState} from "react";
 import {
   InputState,
   initialState,
@@ -7,6 +7,9 @@ import {
   RatesType,
   Mapping,
 } from "./variables";
+import {
+  OutputTable
+} from "./table";
 import {
   Select,
   TextField,
@@ -19,8 +22,12 @@ import {
   InputLabel,
   InputAdornment,
   OutlinedInput,
+  Fade,
+  
 } from "@mui/material";
 import "../App.css";
+import { BlockLike } from "typescript";
+import { callbackify } from "util";
 const multiplier: mult = {
   annually: 1 / 12,
   monthly: 1,
@@ -33,43 +40,77 @@ interface mult {
   weekly: number;
   daily: number;
 }
+export interface BreakdownTable {
+  income:Array<string|null>;
+  rate:Array<string|null>;
+  contr:Array<string|null>;
+}
 
 export const NationalInsurance = (): JSX.Element => {
   const result = {
     employer: 0,
     employee: 0,
   };
+  const [empTable,setEmpTable] = useState<BreakdownTable>();
+  const [bossTable,setBossTable] = useState<BreakdownTable>();
   const [inputState, setInputState] = useState<InputState>(initialState);
   const [resultState, setResultState] = useState<any>(result);
+  const [displayBreakdown,setDisplayBreakdown] = useState<boolean>(false);
+  const [displayBreakdown2,setDisplayBreakdown2] = useState<boolean>(false);
   useEffect(() => {
     const payPeriod = inputState.payPeriod;
     const pay = inputState.pay * multiplier[payPeriod as keyof mult];
+
     const category = inputState.category;
     const before = inputState.validDate ? false : true;
 
-    resultState.employee = calculateNI(pay, category, employeeRates, before);
-    resultState.employer = calculateNI(pay, category, employerData, before);
-    console.log("employees ", resultState.employee);
+    resultState.employee = calculateNI(pay, category, employeeRates, before,setEmpTable);
+    resultState.employer = calculateNI(pay, category, employerData, before,setBossTable);
+  
+    console.log("boss table ",bossTable)
+    
     setResultState({...resultState});
   }, [inputState]);
+  useEffect(()=>{
+
+  },[])
   const calculateNI = (
     pay: number,
     category: string,
     rates: RatesType,
-    before: boolean
+    before: boolean,
+    callBack:React.Dispatch<SetStateAction<BreakdownTable | undefined>>
   ) => {
     const data = before ? rates["before"] : rates["after"];
     let tot = 0;
     let temp = pay;
+    const table:BreakdownTable = {income:[],rate:[],contr:[]}
+  
     if (temp < data[0]!.start) return 0;
     for (let i = 0; i < data.length; i++) {
       const start: number = data[i].start;
       const end: number = data[i].end;
       const taxable = Math.max(Math.min(end, pay) - start, 0);
       tot += taxable * data[i].categories[category as keyof Mapping];
+      table.income.push(currencyFormat(start).toString())
+      table.rate.push(perc(data[i].categories[category as keyof Mapping]))
+      table.contr.push(currencyFormat(taxable * data[i].categories[category as keyof Mapping]))
+     
     }
+    table.contr.push(currencyFormat(roundUpAll(tot)))
+    table.income.push("Total")
+    table.rate.push(perc((tot/pay)))
+
+    callBack({...table})
+
+    console.log("table ",table)
+
+
     return roundUpAll(tot);
   };
+  const perc = (original:number):string=>{
+    return (original*100).toFixed(2)+"%"
+  }
   return (
     <Paper
       className="myinput"
@@ -166,16 +207,43 @@ export const NationalInsurance = (): JSX.Element => {
           <MenuItem value="Z">Z</MenuItem>
         </Select>
       </FormControl>
-      <p style={{textDecoration: "underline", fontWeight: "bold"}}>
+      <p style={{textDecoration: "none", fontWeight: "bold"}}>
         NI Employee: £{currencyFormat(resultState.employee)}
+    
+         <FormLabel style={{fontWeight: "bold", color: "black",marginLeft:"10px",textDecoration:"none"}}>
+      Display breakdown
+        </FormLabel>
+        <Switch
+          onChange={e => {
+            setDisplayBreakdown(e.target.checked)
+          }}
+          value={displayBreakdown}
+        />
+        {displayBreakdown &&empTable ? <OutputTable result={empTable}/>:<></>}
       </p>
-      <p style={{textDecoration: "underline", fontWeight: "bold"}}>
+
+
+      <p style={{textDecoration: "none", fontWeight: "bold"}}>
         NI Employer: £{currencyFormat(resultState.employer)}
+        <FormLabel style={{fontWeight: "bold", color: "black",marginLeft:"10px",textDecoration:"none"}}>
+      Display breakdown
+        </FormLabel>
+        <Switch
+          onChange={e => {
+            setDisplayBreakdown2(e.target.checked)
+          }}
+          value={displayBreakdown2}
+        />
+        {displayBreakdown2 &&bossTable ? <OutputTable result={bossTable}/>:<></>}
       </p>
+      
+  
+   
+    
     </Paper>
   );
 };
-const currencyFormat = (num: number): string => {
+export const currencyFormat = (num: number): string => {
   return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 };
 

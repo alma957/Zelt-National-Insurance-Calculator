@@ -3,6 +3,7 @@ export interface InputState {
   payPeriod: string;
   pay: number;
   category: string;
+
 }
 export const initialState: InputState = {
   validDate: true,
