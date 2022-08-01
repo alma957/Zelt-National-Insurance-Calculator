@@ -28,6 +28,8 @@ import {
 import "../App.css";
 import { BlockLike } from "typescript";
 import { callbackify } from "util";
+import { Logger } from "apify/build/utils_log";
+import { Box } from "@mui/system";
 const multiplier: mult = {
   annually: 1 / 12,
   monthly: 1,
@@ -44,15 +46,17 @@ export interface BreakdownTable {
   income:Array<string|null>;
   rate:Array<string|null>;
   contr:Array<string|null>;
+  incomeBand:Array<string|null>;
 }
 
 export const NationalInsurance = (): JSX.Element => {
   const result = {
     employer: 0,
     employee: 0,
+    bossTable:null as any,
+    empTable:null as any
   };
-  const [empTable,setEmpTable] = useState<BreakdownTable>();
-  const [bossTable,setBossTable] = useState<BreakdownTable>();
+ 
   const [inputState, setInputState] = useState<InputState>(initialState);
   const [resultState, setResultState] = useState<any>(result);
   const [displayBreakdown,setDisplayBreakdown] = useState<boolean>(false);
@@ -64,13 +68,16 @@ export const NationalInsurance = (): JSX.Element => {
     const category = inputState.category;
     const before = inputState.validDate ? false : true;
 
-    resultState.employee = calculateNI(pay, category, employeeRates, before,setEmpTable);
-    resultState.employer = calculateNI(pay, category, employerData, before,setBossTable);
-  
-    console.log("boss table ",bossTable)
+    resultState.employee = calculateNI(pay, category, employeeRates, before,false);
+    resultState.employer = calculateNI(pay, category, employerData, before,true);
+
+
+    
+
     
     setResultState({...resultState});
-  }, [inputState]);
+    
+  }, [inputState,displayBreakdown,displayBreakdown2]);
   useEffect(()=>{
 
   },[])
@@ -79,32 +86,50 @@ export const NationalInsurance = (): JSX.Element => {
     category: string,
     rates: RatesType,
     before: boolean,
-    callBack:React.Dispatch<SetStateAction<BreakdownTable | undefined>>
+    boss:boolean
   ) => {
     const data = before ? rates["before"] : rates["after"];
     let tot = 0;
-    let temp = pay;
-    const table:BreakdownTable = {income:[],rate:[],contr:[]}
-  
-    if (temp < data[0]!.start) return 0;
+   
+    const table:BreakdownTable = {income:[],rate:[],contr:[],incomeBand:[]}
+    if(boss) {
+      
+      resultState.bossTable = table
+    }
+    else  {
+     resultState.empTable = table
+    }
+    let tx = 0
+    
+
+
+
+    table.incomeBand.push("0 < x < "+data[0].start)
+    table.income.push(currencyFormat(Math.max(Math.min(data[0].start, pay), 0)))
+    table.rate.push("0%")
+    table.contr.push("0")
+    
     for (let i = 0; i < data.length; i++) {
       const start: number = data[i].start;
       const end: number = data[i].end;
+      
       const taxable = Math.max(Math.min(end, pay) - start, 0);
+      
+      tx+=taxable
       tot += taxable * data[i].categories[category as keyof Mapping];
-      table.income.push(currencyFormat(start).toString())
+      table.income.push(currencyFormat(roundUpAll(taxable)))
+      table.incomeBand.push(currencyFormat(start)+" < x < "+currencyFormat(end))
       table.rate.push(perc(data[i].categories[category as keyof Mapping]))
-      table.contr.push(currencyFormat(taxable * data[i].categories[category as keyof Mapping]))
+      table.contr.push(currencyFormat(roundUpAll(taxable * data[i].categories[category as keyof Mapping])))
      
     }
     table.contr.push(currencyFormat(roundUpAll(tot)))
-    table.income.push("Total")
-    table.rate.push(perc((tot/pay)))
-
-    callBack({...table})
-
-    console.log("table ",table)
-
+    table.income.push(currencyFormat(roundUpAll(pay)))
+    table.rate.push(perc(tot/pay))
+    table.incomeBand.push("Total")
+    table.incomeBand[table.incomeBand.length-2] = table.incomeBand[table.incomeBand.length-2]?.replace(/\s\<\sx\s\<\sInfinity/,"") as string 
+    
+    
 
     return roundUpAll(tot);
   };
@@ -115,7 +140,7 @@ export const NationalInsurance = (): JSX.Element => {
     <Paper
       className="myinput"
       style={{
-        width: "35%",
+        width: "95%",
         padding: "20px",
         display: "flex",
         flexDirection: "column",
@@ -126,6 +151,7 @@ export const NationalInsurance = (): JSX.Element => {
       }}
     >
       {/* //"#F2F2F7" */}
+      
       <FormGroup style={{flexDirection: "row", justifyContent: "flex-start"}}>
         <FormLabel style={{fontWeight: "bold", color: "black"}}>
           Were earnings paid before 6th July 2022?
@@ -141,8 +167,10 @@ export const NationalInsurance = (): JSX.Element => {
           }}
           value={!inputState.validDate}
         />
+        
       </FormGroup>{" "}
-      <FormControl style={{marginTop: "10px"}}>
+          <Box style={{display:"flex",flexDirection:"row",justifyContent:"flex-start"}}>
+      <FormControl style={{marginTop: "16px",marginLeft:"2px"}}>
         <InputLabel style={{fontWeight: "bold", color: "black"}}>
           Pay period
         </InputLabel>
@@ -165,7 +193,7 @@ export const NationalInsurance = (): JSX.Element => {
       <TextField
         label="Enter pay"
         type="number"
-        style={{marginTop: "15px", background: "white"}}
+        style={{marginTop: "15px", background: "white",marginLeft:"10px"}}
         InputLabelProps={{
           shrink: true,
           style: {color: "black", fontWeight: "bold"},
@@ -188,7 +216,7 @@ export const NationalInsurance = (): JSX.Element => {
           inputProps={{}}
           input={<OutlinedInput label="Select NICs Category  " />}
           value={inputState.category}
-          style={{background: "white"}}
+          style={{background: "white",marginLeft:"10px",width:"200px"}}
           onChange={e => {
             inputState.category = e.target.value;
             setInputState({...inputState});
@@ -207,10 +235,14 @@ export const NationalInsurance = (): JSX.Element => {
           <MenuItem value="Z">Z</MenuItem>
         </Select>
       </FormControl>
+      </Box>
       <p style={{textDecoration: "none", fontWeight: "bold"}}>
-        NI Employee: £{currencyFormat(resultState.employee)}
+        Employee NI deduction: £{currencyFormat(resultState.employee)}
     
-         <FormLabel style={{fontWeight: "bold", color: "black",marginLeft:"10px",textDecoration:"none"}}>
+        
+      </p>
+      <Box>
+      <FormLabel style={{ color: "black",marginLeft:"10px",textDecoration:"none"}}>
       Display breakdown
         </FormLabel>
         <Switch
@@ -219,13 +251,14 @@ export const NationalInsurance = (): JSX.Element => {
           }}
           value={displayBreakdown}
         />
-        {displayBreakdown &&empTable ? <OutputTable result={empTable}/>:<></>}
-      </p>
-
-
+        {displayBreakdown  ? <OutputTable result={resultState.empTable}/>:<></>}
+    </Box>
       <p style={{textDecoration: "none", fontWeight: "bold"}}>
-        NI Employer: £{currencyFormat(resultState.employer)}
-        <FormLabel style={{fontWeight: "bold", color: "black",marginLeft:"10px",textDecoration:"none"}}>
+        Employer NI contribution: £{currencyFormat(resultState.employer)}
+       
+      </p>
+      <Box>
+      <FormLabel style={{ color: "black",marginLeft:"10px",textDecoration:"none"}}>
       Display breakdown
         </FormLabel>
         <Switch
@@ -234,10 +267,8 @@ export const NationalInsurance = (): JSX.Element => {
           }}
           value={displayBreakdown2}
         />
-        {displayBreakdown2 &&bossTable ? <OutputTable result={bossTable}/>:<></>}
-      </p>
-      
-  
+        {displayBreakdown2  ? <OutputTable result={resultState.bossTable}/>:<></>}
+          </Box>
    
     
     </Paper>
