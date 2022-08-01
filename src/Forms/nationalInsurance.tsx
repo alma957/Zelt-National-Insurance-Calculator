@@ -229,7 +229,7 @@ export const NationalInsurance = (): JSX.Element => {
       <TextField
         label="Gross pay"
         type="number"
-        style={{marginTop: "15px", background: "white",marginLeft:"10px","width":"100%"}}
+        style={{marginTop: "15px", background: "white","width":"100%",marginLeft:"10px"}}
         InputLabelProps={{
           shrink: true,
           style: {color: "black", fontWeight: "bold"},
@@ -244,15 +244,15 @@ export const NationalInsurance = (): JSX.Element => {
         }}
         value={inputState.pay}
       />
-      <FormControl style={{marginTop: "15px","width":"100%"}}>
-        <InputLabel style={{color: "black", fontWeight: "bold"}}>
+      <FormControl style={{marginTop: "15px","width":"100%",marginLeft:"10px"}}>
+        <InputLabel style={{color: "black", fontWeight: "bold",marginLeft:"0px"}}>
           Select NICs Category
         </InputLabel>
         <Select
           inputProps={{}}
-          input={<OutlinedInput label="Select NICs Category  " />}
+          input={<OutlinedInput label="Select NICs Category" style={{marginLeft:"10px"}} />}
           value={inputState.category}
-          style={{background: "white",marginLeft:"10px","width":"100%"}}
+          style={{background: "white","width":"100%"}}
           onChange={e => {
             inputState.category = e.target.value;
             setInputState({...inputState});
