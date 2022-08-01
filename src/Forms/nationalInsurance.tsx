@@ -43,10 +43,16 @@ interface mult {
   daily: number;
 }
 export interface BreakdownTable {
-  income:Array<string|null>;
-  rate:Array<string|null>;
-  contr:Array<string|null>;
-  incomeBand:Array<string|null>;
+  income:Array<number|null>;
+  rate:Array<number|null>;
+  contr:Array<number|null>;
+  incomeBand:Array<{
+    start:number,
+    end:number
+  }|string>
+}
+export const perc = (original:number):string=>{
+  return (original*100).toFixed(2)+"%"
 }
 
 export const NationalInsurance = (): JSX.Element => {
@@ -99,43 +105,74 @@ export const NationalInsurance = (): JSX.Element => {
     else  {
      resultState.empTable = table
     }
-    let tx = 0
+
     
 
 
 
-    table.incomeBand.push("0 < x < "+data[0].start)
-    table.income.push(currencyFormat(Math.max(Math.min(data[0].start, pay), 0)))
-    table.rate.push("0%")
-    table.contr.push("0")
-    
+    (table.incomeBand as Array<{start:number;end:number}>).push({start:0,end:data[0].start})
+ 
+    table.income.push((Math.max(Math.min(data[0].start, pay), 0)))
+    table.rate.push(0)
+    table.contr.push(0)
+    let tempRate = 0
+
     for (let i = 0; i < data.length; i++) {
+      const rate = data[i].categories[category as keyof Mapping];
       const start: number = data[i].start;
-      const end: number = data[i].end;
+      const lastInd:number = table.incomeBand.length-1;  
+        const end: number = data[i].end;
+
+   
+        const taxable:number = Math.max(Math.min(end, pay) - start, 0);
+        const contribution = taxable * data[i].categories[category as keyof Mapping];
+        tot += contribution;
+
+      if(rate===tempRate) {
       
-      const taxable = Math.max(Math.min(end, pay) - start, 0);
+        (table.income as Array<number>)![lastInd]! += taxable;
+     
+        
+        table.contr![lastInd]!+=contribution;
+        (table.incomeBand as Array<{start:number;end:number}>)![lastInd]!.end = end
+          
+        
+
+      } else{
+        
       
-      tx+=taxable
-      tot += taxable * data[i].categories[category as keyof Mapping];
-      table.income.push(currencyFormat(roundUpAll(taxable)))
-      table.incomeBand.push(currencyFormat(start)+" < x < "+currencyFormat(end))
-      table.rate.push(perc(data[i].categories[category as keyof Mapping]))
-      table.contr.push(currencyFormat(roundUpAll(taxable * data[i].categories[category as keyof Mapping])))
+      tempRate=rate    
+      
+      table.income.push(taxable);
+  
+        (table.incomeBand  as Array<{start:number;end:number}>).push({start:start,end:end})
+
+      table.rate.push(rate)
+      table.contr.push(contribution)
+      }
+
+      
+  
      
     }
-    table.contr.push(currencyFormat(roundUpAll(tot)))
-    table.income.push(currencyFormat(roundUpAll(pay)))
-    table.rate.push(perc(tot/pay))
-    table.incomeBand.push("Total")
-    table.incomeBand[table.incomeBand.length-2] = table.incomeBand[table.incomeBand.length-2]?.replace(/\s\<\sx\s\<\sInfinity/,"") as string 
+    const lastInd:number = table.incomeBand.length-1;  
+    
+    
+      (table.incomeBand[lastInd] as string) = "X >= "+ (table.incomeBand  as Array<{start:number;end:number}>)[lastInd]["start"].toString();
+    
+
+    table.contr.push(roundUpAll(tot));
+    table.income.push(roundUpAll(pay));
+    table.rate.push(tot/pay);
+    ( table.incomeBand).push("Total");
+   // table.incomeBand[table.incomeBand.length-2] = table.incomeBand[table.incomeBand.length-2]?.replace(/\s\<\sx\s\<\sInfinity/,"") as string 
     
     
 
     return roundUpAll(tot);
   };
-  const perc = (original:number):string=>{
-    return (original*100).toFixed(2)+"%"
-  }
+
+ 
   return (
     <Paper
       className="myinput"

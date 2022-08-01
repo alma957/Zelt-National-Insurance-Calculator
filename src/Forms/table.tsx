@@ -1,5 +1,5 @@
 import {  Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
-import {BreakdownTable} from "./nationalInsurance"
+import {BreakdownTable,currencyFormat,roundUpAll,perc} from "./nationalInsurance"
 export const OutputTable = ({result}:any): JSX.Element => {
 
     const res = result as BreakdownTable
@@ -33,10 +33,10 @@ export const OutputTable = ({result}:any): JSX.Element => {
               sx={{ '&:last-child td, &:last-child th': { border: 0,backgroundColor:"#D3D3D3",fontWeight:"bold" } }}
             >
       
-              <TableCell align="left">{row!.incomeBand! as string }</TableCell>
-              <TableCell align="left">{row!.income?.toString()! as string}</TableCell>
-              <TableCell align="left">{row!.rate?.toString() as string}</TableCell>
-              <TableCell align="left">{row!.contribution!.toString() as string}</TableCell>
+              <TableCell align="left">{typeof row.incomeBand==="string" ? row.incomeBand: ((row!.incomeBand as {start:number;end:number}).start!).toString()+" < x < "+ (row!.incomeBand as  {start:number;end:number}).end!.toString() as any }</TableCell>
+              <TableCell align="left">{currencyFormat(roundUpAll(row!.income!)) as string}</TableCell>
+              <TableCell align="left">{perc(row!.rate as number) as string}</TableCell>
+              <TableCell align="left">{currencyFormat(roundUpAll(row!.contribution!)) as string}</TableCell>
              
             </TableRow>
           ))}
