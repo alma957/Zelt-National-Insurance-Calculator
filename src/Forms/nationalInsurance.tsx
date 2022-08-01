@@ -140,7 +140,7 @@ export const NationalInsurance = (): JSX.Element => {
     <Paper
       className="myinput"
       style={{
-        width: "608px",
+        width: "90%",
         padding: "20px",
         display: "flex",
         flexDirection: "column",
@@ -169,14 +169,14 @@ export const NationalInsurance = (): JSX.Element => {
         />
         
       </FormGroup>{" "}
-          <Box style={{display:"flex",flexDirection:"row",justifyContent:"flex-start"}}>
-      <FormControl style={{marginTop: "16px",marginLeft:"2px"}}>
+          <Box style={{display:"flex",flexDirection:"row",justifyContent:"flex-start","width":"100%"}}>
+      <FormControl style={{marginTop: "16px",marginLeft:"2px",width:"100%"}}>
         <InputLabel style={{fontWeight: "bold", color: "black"}}>
           Pay period
         </InputLabel>
         <Select
           label="Pay period"
-          style={{background: "white"}}
+          style={{background: "white","width":"100%"}}
           value={inputState.payPeriod}
           input={<OutlinedInput label="Pay period" />}
           onChange={e => {
@@ -191,9 +191,9 @@ export const NationalInsurance = (): JSX.Element => {
         </Select>
       </FormControl>
       <TextField
-        label="Enter pay"
+        label="Gross pay"
         type="number"
-        style={{marginTop: "15px", background: "white",marginLeft:"10px"}}
+        style={{marginTop: "15px", background: "white",marginLeft:"10px","width":"100%"}}
         InputLabelProps={{
           shrink: true,
           style: {color: "black", fontWeight: "bold"},
@@ -208,7 +208,7 @@ export const NationalInsurance = (): JSX.Element => {
         }}
         value={inputState.pay}
       />
-      <FormControl style={{marginTop: "15px"}}>
+      <FormControl style={{marginTop: "15px","width":"100%"}}>
         <InputLabel style={{color: "black", fontWeight: "bold"}}>
           Select NICs Category
         </InputLabel>
@@ -216,7 +216,7 @@ export const NationalInsurance = (): JSX.Element => {
           inputProps={{}}
           input={<OutlinedInput label="Select NICs Category  " />}
           value={inputState.category}
-          style={{background: "white",marginLeft:"10px",width:"200px"}}
+          style={{background: "white",marginLeft:"10px","width":"100%"}}
           onChange={e => {
             inputState.category = e.target.value;
             setInputState({...inputState});
@@ -251,7 +251,9 @@ export const NationalInsurance = (): JSX.Element => {
           }}
           value={displayBreakdown}
         />
+         <Box style={{width:"100%"}}>
         {displayBreakdown  ? <OutputTable result={resultState.empTable}/>:<></>}
+        </Box>
     </Box>
       <p style={{textDecoration: "none", fontWeight: "bold"}}>
         Employer NI contribution: £{currencyFormat(resultState.employer)}
@@ -267,7 +269,9 @@ export const NationalInsurance = (): JSX.Element => {
           }}
           value={displayBreakdown2}
         />
+        <Box style={{width:"100%"}}>
         {displayBreakdown2  ? <OutputTable result={resultState.bossTable}/>:<></>}
+        </Box>
           </Box>
    
     
