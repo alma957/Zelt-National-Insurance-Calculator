@@ -21,23 +21,23 @@ export const OutputTable = ({result,emp}:any): JSX.Element => {
         <Table size="small">
              <TableHead>
             <TableRow style={{width:'90%'}} >
-            <TableCell  style={{fontWeight:"bold"}} align="left">Band</TableCell> 
-            <TableCell style={{fontWeight:"bold"}} align="left">Income</TableCell> 
-            <TableCell style={{fontWeight:"bold"}} align="left">Rate</TableCell> 
-            <TableCell  style={{fontWeight:"bold"}} align="left">{emp ?"Contribution" : "Deduction"}</TableCell> 
+            <TableCell  style={{fontWeight:"bold",fontSize:"small"}} align="left">Band</TableCell> 
+            <TableCell style={{fontWeight:"bold",fontSize:"small"}} align="left">Income</TableCell> 
+            <TableCell style={{fontWeight:"bold",fontSize:"small"}} align="left">Rate</TableCell> 
+            <TableCell  style={{fontWeight:"bold",fontSize:"small"}} align="left">{emp ?"Contribution" : "Deduction"}</TableCell> 
             </TableRow>
              </TableHead>
              <TableBody>
              {rows.map((row,ind) => (
             <TableRow
             style={{width:'70%'}}
-              sx={{ '&:last-child td, &:last-child th': { border: 0,backgroundColor:"#D3D3D3",fontWeight:"bold" } }}
+              sx={{ '&:last-child td, &:last-child th': { border: 0,backgroundColor:"#D3D3D3",fontWeight:"bold",fontSize:"small" } }}
             >
       
               <TableCell style={{width:'90%', fontSize:row.incomeBand==="Total"?"normal": "x-small"}} align="left">{typeof row.incomeBand==="string" ? row.incomeBand: ((row!.incomeBand as {start:number;end:number}).start!).toString()+"<x<="+ (row!.incomeBand as  {start:number;end:number}).end!.toString() as any }</TableCell>
-              <TableCell style={{width:'90%'}} align="left">{currencyFormat(roundUpAll(row!.income!)) as string}</TableCell>
-              <TableCell style={{width:'90%'}} align="left">{perc(row!.rate as number) as string}</TableCell>
-              <TableCell style={{width:'90%'}} align="left">{currencyFormat(roundUpAll(row!.contribution as number)) as string}</TableCell>
+              <TableCell style={{width:'90%',fontSize:row.incomeBand==="Total"?"normal": "x-small"}} align="left">{currencyFormat(roundUpAll(row!.income!)) as string}</TableCell>
+              <TableCell style={{width:'90%',fontSize:row.incomeBand==="Total"?"normal": "x-small"}} align="left">{perc(row!.rate as number) as string}</TableCell>
+              <TableCell style={{width:'90%',fontSize:row.incomeBand==="Total"?"normal": "x-small"}} align="left">{currencyFormat(roundUpAll(row!.contribution as number)) as string}</TableCell>
              
             </TableRow>
           ))}
