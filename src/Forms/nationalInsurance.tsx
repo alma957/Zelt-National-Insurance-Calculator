@@ -294,10 +294,15 @@ export const NationalInsurance = (): JSX.Element => {
           onChange={e => {
             setDisplayBreakdown(e.target.checked);
             if(document){
+             console.log("checking ")
              const t = document?.getElementById("myFrame");
+             console.log("t: ",t)
              const st =  t?.style;
+             console.log("st: ",st)
+             console.log("height: ",st?.height)
              if(st?.height)
               st.height =  displayBreakdown ? "550px":"300px"
+              console.log("set new height: ",st?.height)
             }
 
           

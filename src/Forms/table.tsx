@@ -1,12 +1,12 @@
 import {  Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
 import {BreakdownTable,currencyFormat,roundUpAll,perc} from "./nationalInsurance"
 export const OutputTable = ({result,emp}:any): JSX.Element => {
-  console.log("emp ",emp )
+
     const res = result as BreakdownTable
   
     emp = emp as boolean
     const rows = []
-    console.log("emp ",emp )
+   
     if(res===undefined|| res===null)
         return <></>
     for (let i=0;i<res.income.length;i++) {       
