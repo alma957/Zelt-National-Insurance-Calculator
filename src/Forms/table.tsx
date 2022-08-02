@@ -21,10 +21,10 @@ export const OutputTable = ({result,emp}:any): JSX.Element => {
         <Table size="small">
              <TableHead>
             <TableRow style={{width:'90%'}} >
-            <TableCell  style={{fontWeight:"bold",fontSize:"small"}} align="left">Band</TableCell> 
-            <TableCell style={{fontWeight:"bold",fontSize:"small"}} align="left">Income</TableCell> 
-            <TableCell style={{fontWeight:"bold",fontSize:"small"}} align="left">Rate</TableCell> 
-            <TableCell  style={{fontWeight:"bold",fontSize:"small"}} align="left">{emp ?"Contribution" : "Deduction"}</TableCell> 
+            <TableCell  style={{fontWeight:"bold",fontSize:"x-small"}} align="left">Band</TableCell> 
+            <TableCell style={{fontWeight:"bold",fontSize:"x-small"}} align="left">Income</TableCell> 
+            <TableCell style={{fontWeight:"bold",fontSize:"x-small"}} align="left">Rate</TableCell> 
+            <TableCell  style={{fontWeight:"bold",fontSize:"x-small"}} align="left">{emp ?"Contribution" : "Deduction"}</TableCell> 
             </TableRow>
              </TableHead>
              <TableBody>
