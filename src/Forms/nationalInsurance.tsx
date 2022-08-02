@@ -268,9 +268,26 @@ export const NationalInsurance = (): JSX.Element => {
 
     </Box>
       
-      <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
+      
+        <Fade in={displayBreakdown} unmountOnExit>
+        <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-evenly",marginTop:"20px"}}>
+        <Box >
+         {/* <Box style={{display:displayBreakdown?"block":"none"}}> */}
+        <OutputTable   result={resultState.empTable} emp={false}/>
+        </Box>
+   
+     
+      <Box>
+     
+        <Box style={{marginLeft:"10px"}}>
+        <OutputTable  result={resultState.bossTable} emp={true}/>
+        </Box>      
+        </Box>    
+        </Box>
+        </Fade>
+        <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
   
-      <Box style={{textAlign:"center",width:"100%"}}>       
+      <Box style={{textAlign:"center",width:"100%",marginTop:"20px"}}>       
       <FormLabel style={{ color: "black",marginLeft:"10px",textDecoration:"none"}}>
       Display breakdown
         </FormLabel>
@@ -297,22 +314,6 @@ export const NationalInsurance = (): JSX.Element => {
         </Box>
 
         </Box>
-        <Fade in={displayBreakdown} unmountOnExit>
-        <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-evenly",marginTop:"20px"}}>
-        <Box >
-         {/* <Box style={{display:displayBreakdown?"block":"none"}}> */}
-        <OutputTable   result={resultState.empTable} emp={false}/>
-        </Box>
-   
-     
-      <Box>
-     
-        <Box style={{marginLeft:"10px"}}>
-        <OutputTable  result={resultState.bossTable} emp={true}/>
-        </Box>      
-        </Box>    
-        </Box>
-        </Fade>
         
    
     
