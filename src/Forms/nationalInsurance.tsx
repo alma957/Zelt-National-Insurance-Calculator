@@ -176,7 +176,7 @@ export const NationalInsurance = (): JSX.Element => {
     <Paper
       className="myinput"
       style={{
-        width: "90%",
+        width: "720px",
         padding: "20px",
         display: "flex",
         flexDirection: "column",
@@ -302,17 +302,17 @@ export const NationalInsurance = (): JSX.Element => {
 
         </Box>
         <Fade in={displayBreakdown} unmountOnExit>
-        <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between",marginTop:"20px"}}>
-        <Box>
+        <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-evenly",marginTop:"20px"}}>
+        <Box >
          {/* <Box style={{display:displayBreakdown?"block":"none"}}> */}
-        <OutputTable  result={resultState.empTable}/>
+        <OutputTable   result={resultState.empTable} emp={false}/>
         </Box>
    
      
       <Box>
      
-        <Box >
-        <OutputTable  result={resultState.bossTable}/>
+        <Box style={{marginLeft:"10px"}}>
+        <OutputTable  result={resultState.bossTable} emp={true}/>
         </Box>      
         </Box>    
         </Box>
