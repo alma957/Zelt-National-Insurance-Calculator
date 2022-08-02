@@ -1,4 +1,4 @@
-import {  Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
+import {  Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
 import {BreakdownTable,currencyFormat,roundUpAll,perc} from "./nationalInsurance"
 export const OutputTable = ({result,emp}:any): JSX.Element => {
 

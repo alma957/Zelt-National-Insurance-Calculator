@@ -1,4 +1,4 @@
-import {SetStateAction, useEffect, useState} from "react";
+import { useEffect, useState} from "react";
 import {
   InputState,
   initialState,
@@ -13,7 +13,6 @@ import {
 import {
   Select,
   TextField,
-  FormGroup,
   Paper,
   Switch,
   FormLabel,
@@ -82,6 +81,7 @@ export const NationalInsurance = (): JSX.Element => {
     
     setResultState({...resultState});
     
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputState,displayBreakdown]);
   useEffect(()=>{
 
@@ -157,7 +157,7 @@ export const NationalInsurance = (): JSX.Element => {
     const lastInd:number = table.incomeBand.length-1;  
     
     
-      (table.incomeBand[lastInd] as string) = "X >= "+ (table.incomeBand  as Array<{start:number;end:number}>)[lastInd]["start"].toString();
+      (table.incomeBand[lastInd] as string) = "X>="+ (table.incomeBand  as Array<{start:number;end:number}>)[lastInd]["start"].toString();
     
 
     table.contr.push(roundUpAll(tot));
@@ -294,17 +294,7 @@ export const NationalInsurance = (): JSX.Element => {
         <Switch
           onChange={e => {
             setDisplayBreakdown(e.target.checked);
-            if(document){
-             console.log("checking ")
-             const t = document?.getElementById("myFrame");
-             console.log("t: ",t)
-             const st =  t?.style;
-             console.log("st: ",st)
-             console.log("height: ",st?.height)
-             if(st?.height)
-              st.height =  displayBreakdown ? "550px":"300px"
-              console.log("set new height: ",st?.height)
-            }
+            
 
           
             
