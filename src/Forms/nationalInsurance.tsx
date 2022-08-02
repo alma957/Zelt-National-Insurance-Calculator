@@ -65,7 +65,7 @@ export const NationalInsurance = (): JSX.Element => {
   const [inputState, setInputState] = useState<InputState>(initialState);
   const [resultState, setResultState] = useState<any>(result);
   const [displayBreakdown,setDisplayBreakdown] = useState<boolean>(false);
-  const [displayBreakdown2,setDisplayBreakdown2] = useState<boolean>(false);
+  
   useEffect(() => {
     const payPeriod = inputState.payPeriod;
     const pay = inputState.pay * multiplier[payPeriod as keyof mult];
@@ -82,7 +82,7 @@ export const NationalInsurance = (): JSX.Element => {
     
     setResultState({...resultState});
     
-  }, [inputState,displayBreakdown,displayBreakdown2]);
+  }, [inputState,displayBreakdown]);
   useEffect(()=>{
 
   },[])
@@ -188,23 +188,7 @@ export const NationalInsurance = (): JSX.Element => {
     >
       {/* //"#F2F2F7" */}
       
-      <FormGroup style={{flexDirection: "row", justifyContent: "flex-start"}}>
-        <FormLabel style={{fontWeight: "bold", color: "black"}}>
-          Were earnings paid before 6th July 2022?
-        </FormLabel>
-        <Switch
-          onChange={e => {
-            if (e.target.checked) {
-              inputState.validDate = false;
-            } else {
-              inputState.validDate = true;
-            }
-            setInputState({...inputState});
-          }}
-          value={!inputState.validDate}
-        />
-        
-      </FormGroup>{" "}
+
           <Box style={{display:"flex",flexDirection:"row",justifyContent:"flex-start","width":"100%"}}>
       <FormControl style={{marginTop: "16px",marginLeft:"2px",width:"100%"}}>
         <InputLabel style={{fontWeight: "bold", color: "black"}}>
