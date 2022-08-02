@@ -176,7 +176,7 @@ export const NationalInsurance = (): JSX.Element => {
     <Paper
       className="myinput"
       style={{
-        width: "670px",
+        width: "660px",
         padding: "20px",
         display: "flex",
         flexDirection: "column",
