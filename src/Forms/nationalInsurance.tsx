@@ -76,7 +76,7 @@ export const NationalInsurance = (): JSX.Element => {
     resultState.employee = calculateNI(pay, category, employeeRates, before,false);
     resultState.employer = calculateNI(pay, category, employerData, before,true);
 
-
+   
     
 
     
@@ -292,8 +292,15 @@ export const NationalInsurance = (): JSX.Element => {
         </FormLabel>
         <Switch
           onChange={e => {
-            setDisplayBreakdown(e.target.checked)
-            console.log("hello2")
+            setDisplayBreakdown(e.target.checked);
+            if(document){
+             const t = document?.getElementById("myFrame");
+             const st =  t?.style;
+             if(st?.height)
+              st.height =  displayBreakdown ? "550px":"300px"
+            }
+
+          
             
           }}
           value={displayBreakdown}
