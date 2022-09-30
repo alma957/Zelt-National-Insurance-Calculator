@@ -6,6 +6,10 @@ import {
   employerData,
   RatesType,
   Mapping,
+  multiplier,
+  mult,
+  BreakdownTable
+
 } from "./variables";
 import {
   OutputTable
@@ -28,27 +32,7 @@ import {
 import "../App.css";
 
 
-const multiplier: mult = {
-  annually: 1 / 12,
-  monthly: 1,
-  weekly: 52 / 12,
-  daily: 365 / 12,
-};
-interface mult {
-  annually: number;
-  monthly: number;
-  weekly: number;
-  daily: number;
-}
-export interface BreakdownTable {
-  income:Array<number|null>;
-  rate:Array<number|null>;
-  contr:Array<number|null>;
-  incomeBand:Array<{
-    start:number,
-    end:number
-  }|string>
-}
+
 export const perc = (original:number):string=>{
   return (original*100).toFixed(2)+"%"
 }
@@ -70,10 +54,10 @@ export const NationalInsurance = (): JSX.Element => {
     const pay = inputState.pay * multiplier[payPeriod as keyof mult];
 
     const category = inputState.category;
-    const before = inputState.validDate ? false : true;
-
-    resultState.employee = calculateNI(pay, category, employeeRates, before,false);
-    resultState.employer = calculateNI(pay, category, employerData, before,true);
+   
+    
+    resultState.employee = calculateNI(pay, category, employeeRates, false,false);
+    resultState.employer = calculateNI(pay, category, employerData, false,true);
 
    
     
@@ -91,9 +75,14 @@ export const NationalInsurance = (): JSX.Element => {
     category: string,
     rates: RatesType,
     before: boolean,
-    boss:boolean
+    boss:boolean,
+    month?:string
   ) => {
-    const data = before ? rates["before"] : rates["after"];
+    let data = rates['after']
+    let ind = 0
+    
+  
+    
     let tot = 0;
    
     const table:BreakdownTable = {income:[],rate:[],contr:[],incomeBand:[]}
@@ -104,7 +93,7 @@ export const NationalInsurance = (): JSX.Element => {
     else  {
      resultState.empTable = table
     }
-
+    
     
 
 
@@ -270,21 +259,18 @@ export const NationalInsurance = (): JSX.Element => {
       
       
         <Fade in={displayBreakdown} unmountOnExit>
-        <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-evenly",marginTop:"20px"}}>
-        <Box >
-         {/* <Box style={{display:displayBreakdown?"block":"none"}}> */}
-        <OutputTable   result={resultState.empTable} emp={false}/>
-        </Box>
-   
+        <Box style={{display:"flex",flexDirection:"row",marginTop:"20px"}}>
+       
      
-      <Box>
+    
      
-        <Box style={{marginLeft:"10px"}}>
-        <OutputTable  result={resultState.bossTable} emp={true}/>
-        </Box>      
-        </Box>    
+        
+        <OutputTable    amount={inputState.pay} category = {inputState.category} period = {inputState.payPeriod}/>
+      
+      
         </Box>
         </Fade>
+        
         <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
   
       <Box style={{textAlign:"center",width:"100%",marginTop:"20px"}}>       
