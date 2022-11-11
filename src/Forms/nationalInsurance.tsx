@@ -271,9 +271,6 @@ export const calculateNI = (
     case "Mar-23":
       data  = rates.thirdPeriod
       break;
-      
-
-
     }
   }
   

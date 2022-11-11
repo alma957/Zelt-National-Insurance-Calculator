@@ -11,7 +11,7 @@ export const OutputTable = ({pay,category}:any): JSX.Element => {
     
    // Employer NI contribution: £{currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employerData))}
     const months = ["Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan-23","Feb-23","Mar-23","Total"]
-    console.log("test ",calculateNI(pay,category,employeeRates,"Apr"))
+
     for (let i=0;i<months.length-1;i++) {       
             rows.push({"employee":calculateNI(pay,category,employeeRates,months[i]), "employer":calculateNI(pay,category,employerData,months[i])})
     }
