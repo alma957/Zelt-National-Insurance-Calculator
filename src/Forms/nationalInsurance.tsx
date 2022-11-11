@@ -262,6 +262,18 @@ export const calculateNI = (
     case "Dec":
       data  = rates.thirdPeriod
       break;
+    case "Jan-23":
+      data  = rates.thirdPeriod
+      break;
+    case "Feb-23":
+      data  = rates.thirdPeriod
+      break;
+    case "Mar-23":
+      data  = rates.thirdPeriod
+      break;
+      
+
+
     }
   }
   
