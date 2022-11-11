@@ -231,9 +231,9 @@ export const calculateNI = (
   rates: RatesType,    
   month?:string
 ) => {
-  let data = rates.thirdPeriod
+  let data = rates.thirdPeriod;
  
-  if (month){
+  
     switch(month) {
     case "Apr":
       data  = rates.firstPeriod
@@ -271,8 +271,12 @@ export const calculateNI = (
     case "Mar-23":
       data  = rates.thirdPeriod
       break;
+    default:
+      data = rates.thirdPeriod
+
+
     }
-  }
+  
   
   
   let tot = 0;
@@ -280,7 +284,7 @@ export const calculateNI = (
  
 
  
-  let tempRate = 0
+
 
   for (let i = 0; i < data.length; i++) {
     const rate = data[i].categories[category as keyof Mapping];
