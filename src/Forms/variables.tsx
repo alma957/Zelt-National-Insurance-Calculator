@@ -12,8 +12,10 @@ export const initialState: InputState = {
   category: "A",
 };
 export interface RatesType {
-  before: Array<Rates>;
-  after: Array<Rates>;
+  firstPeriod: Array<Rates>;
+  secondPeriod: Array<Rates>;
+  thirdPeriod: Array<Rates>;
+
 }
 export interface Mapping {
   A: number;
@@ -35,7 +37,7 @@ export interface Rates {
   categories: Mapping;
 }
 export const employeeRates: RatesType = {
-  before: [
+  firstPeriod: [
     {
       start: 823,
       end: 4189,
@@ -74,7 +76,7 @@ export const employeeRates: RatesType = {
       },
     },
   ],
-  after: [
+  secondPeriod: [
     {
       start: 1048,
       end: 4189,
@@ -112,6 +114,44 @@ export const employeeRates: RatesType = {
       },
     },
   ],
+  thirdPeriod: [
+    {
+      start: 1048,
+      end: 4189,
+      categories: {
+        A: 0.12,
+        B: 0.0585,
+        F: 0.12,
+        H: 0.12,
+        M: 0.12,
+        V: 0.12,
+        I: 0.0585,
+        J: 0.02,
+        L: 0.02,
+        Z: 0.02,
+        S: 0,
+        C: 0,
+      },
+    },
+    {
+      start: 4189.01,
+      end: Infinity,
+      categories: {
+        A: 0.02,
+        B: 0.02,
+        F: 0.02,
+        H: 0.02,
+        M: 0.02,
+        V: 0.02,
+        I: 0.02,
+        J: 0.02,
+        L: 0.02,
+        Z: 0.02,
+        S: 0,
+        C: 0,
+      },
+    },
+  ]
 };
 /////EMPLOYER DATA
 //////////////////
@@ -123,7 +163,7 @@ export const employeeRates: RatesType = {
 ////////////////////////////////////
 //////////////////
 export const employerData: RatesType = {
-  before: [
+  firstPeriod: [
     {
       start: 758,
       end: 2083,
@@ -179,7 +219,7 @@ export const employerData: RatesType = {
       },
     },
   ],
-  after: [
+  secondPeriod: [
     {
       start: 758,
       end: 2083,
@@ -235,6 +275,62 @@ export const employerData: RatesType = {
       },
     },
   ],
+  thirdPeriod: [
+    {
+      start: 758,
+      end: 2083,
+      categories: {
+        A: 0.138,
+        B: 0.138,
+        C: 0.138,
+        F: 0,
+        H: 0,
+        I: 0,
+        J: 0.138,
+        L: 0,
+        M: 0,
+        S: 0,
+        V: 0,
+        Z: 0,
+      },
+    },
+    {
+      start: 2083.01,
+      end: 4189,
+      categories: {
+        A: 0.138,
+        B: 0.138,
+        C: 0.138,
+        F: 0.138,
+        H: 0,
+        I: 0.138,
+        J: 0.138,
+        L: 0.138,
+        M: 0,
+        S: 0.138,
+        V: 0,
+        Z: 0,
+      },
+    },
+    {
+      start: 4189.01,
+      end: Infinity,
+      categories: {
+        A: 0.138,
+        B: 0.138,
+        C: 0.138,
+        F: 0.138,
+        H: 0.138,
+        I: 0.138,
+        J: 0.138,
+        L: 0.138,
+        M: 0.138,
+        S: 0.138,
+        V: 0.138,
+        Z: 0.138,
+      },
+    },
+  ]
 };
 
 export const multiplier: mult = {

@@ -50,115 +50,13 @@ export const NationalInsurance = (): JSX.Element => {
   const [displayBreakdown,setDisplayBreakdown] = useState<boolean>(false);
   
   useEffect(() => {
-    const payPeriod = inputState.payPeriod;
-    const pay = inputState.pay * multiplier[payPeriod as keyof mult];
-
-    const category = inputState.category;
-   
     
-    resultState.employee = calculateNI(pay, category, employeeRates, false,false);
-    resultState.employer = calculateNI(pay, category, employerData, false,true);
-
-   
-    
-
-    
-    setResultState({...resultState});
     
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputState,displayBreakdown]);
   useEffect(()=>{
 
   },[])
-  const calculateNI = (
-    pay: number,
-    category: string,
-    rates: RatesType,
-    before: boolean,
-    boss:boolean,
-    month?:string
-  ) => {
-    let data = rates['after']
-    let ind = 0
-    
-  
-    
-    let tot = 0;
-   
-    const table:BreakdownTable = {income:[],rate:[],contr:[],incomeBand:[]}
-    if(boss) {
-      
-      resultState.bossTable = table
-    }
-    else  {
-     resultState.empTable = table
-    }
-    
-    
-
-
-
-    (table.incomeBand as Array<{start:number;end:number}>).push({start:0,end:data[0].start})
- 
-    table.income.push((Math.max(Math.min(data[0].start, pay), 0)))
-    table.rate.push(0)
-    table.contr.push(0)
-    let tempRate = 0
-
-    for (let i = 0; i < data.length; i++) {
-      const rate = data[i].categories[category as keyof Mapping];
-      const start: number = data[i].start;
-      const lastInd:number = table.incomeBand.length-1;  
-        const end: number = data[i].end;
-
-   
-        const taxable:number = Math.max(Math.min(end, pay) - start, 0);
-        const contribution = taxable * data[i].categories[category as keyof Mapping];
-        tot += contribution;
-
-      if(rate===tempRate) {
-      
-        (table.income as Array<number>)![lastInd]! += taxable;
-     
-        
-        table.contr![lastInd]!+=contribution;
-        (table.incomeBand as Array<{start:number;end:number}>)![lastInd]!.end = end
-          
-        
-
-      } else{
-        
-      
-      tempRate=rate    
-      
-      table.income.push(taxable);
-  
-        (table.incomeBand  as Array<{start:number;end:number}>).push({start:start,end:end})
-
-      table.rate.push(rate)
-      table.contr.push(contribution)
-      }
-
-      
-  
-     
-    }
-    const lastInd:number = table.incomeBand.length-1;  
-    
-    
-      (table.incomeBand[lastInd] as string) = "X>="+ (table.incomeBand  as Array<{start:number;end:number}>)[lastInd]["start"].toString();
-    
-
-    table.contr.push(roundUpAll(tot));
-    table.income.push(roundUpAll(pay));
-    table.rate.push(tot/pay);
-    ( table.incomeBand).push("Total");
-   // table.incomeBand[table.incomeBand.length-2] = table.incomeBand[table.incomeBand.length-2]?.replace(/\s\<\sx\s\<\sInfinity/,"") as string 
-    
-    
-
-    return roundUpAll(tot);
-  };
 
  
   return (
@@ -247,12 +145,12 @@ export const NationalInsurance = (): JSX.Element => {
       </Box>
       <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
       <p style={{textDecoration: "none", fontWeight: "bold"}}>
-        Employee NI deduction: £{currencyFormat(resultState.employee)}
-       
+      Employee NI deduction: £{currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employeeRates))}
+     
         
       </p>
     <p style={{textDecoration: "none", fontWeight: "bold"}}>
-    Employer NI contribution: £{currencyFormat(resultState.employer)}
+    Employer NI contribution: £{currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employerData))}
     </p>
 
     </Box>
@@ -265,7 +163,7 @@ export const NationalInsurance = (): JSX.Element => {
     
      
         
-        <OutputTable    amount={inputState.pay} category = {inputState.category} period = {inputState.payPeriod}/>
+        <OutputTable pay={inputState.pay * multiplier[inputState.payPeriod as keyof mult]} category = {inputState.category}/>
       
       
         </Box>
@@ -326,4 +224,71 @@ export const roundUpAll = (original: number): number => {
   } else {
     return original;
   }
+};
+export const calculateNI = (
+  pay: number,
+  category: string,
+  rates: RatesType,    
+  month?:string
+) => {
+  let data = rates.thirdPeriod
+ 
+  if (month){
+    switch(month) {
+    case "Apr":
+      data  = rates.firstPeriod
+      break;
+    case "May":
+      data  = rates.firstPeriod
+      break;
+    case "Jun":
+      data  = rates.firstPeriod
+      break;
+    case "Jul":
+      data  = rates.secondPeriod
+      break;
+    case "Aug":
+      data  = rates.secondPeriod
+      break;
+    case "Sep":
+      data  = rates.secondPeriod
+      break;
+    case "Oct":
+      data  = rates.secondPeriod
+      break;
+    case "Nov":
+      data  = rates.thirdPeriod
+      break;
+    case "Dec":
+      data  = rates.thirdPeriod
+      break;
+    }
+  }
+  
+  
+  let tot = 0;
+ 
+ 
+
+ 
+  let tempRate = 0
+
+  for (let i = 0; i < data.length; i++) {
+    const rate = data[i].categories[category as keyof Mapping];
+    const start: number = data[i].start;
+   
+      const end: number = data[i].end;
+
+ 
+      const taxable:number = Math.max(Math.min(end, pay) - start, 0);
+      const contribution = taxable * data[i].categories[category as keyof Mapping];
+      tot += contribution;
+
+  
+    
+
+   
+  }
+ 
+  return roundUpAll(tot);
 };
