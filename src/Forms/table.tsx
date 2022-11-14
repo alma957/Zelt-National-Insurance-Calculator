@@ -1,7 +1,7 @@
 import {  Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
 
 import {currencyFormat,calculateNI} from "./nationalInsurance"
-import { mult, multiplier,employeeRates,employerData} from "./variables"
+import { employeeRates,employerData} from "./variables"
 export const OutputTable = ({pay,category}:any): JSX.Element => {
  
    

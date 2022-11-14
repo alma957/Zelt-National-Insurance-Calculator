@@ -1,4 +1,4 @@
-import { useEffect, useState} from "react";
+import { useState} from "react";
 import {
   InputState,
   initialState,
@@ -7,8 +7,7 @@ import {
   RatesType,
   Mapping,
   multiplier,
-  mult,
-  BreakdownTable
+  mult
 
 } from "./variables";
 import {
@@ -30,6 +29,7 @@ import {
   
 } from "@mui/material";
 import "../App.css";
+import { validateLocaleAndSetLanguage } from "typescript";
 
 
 
@@ -38,27 +38,14 @@ export const perc = (original:number):string=>{
 }
 
 export const NationalInsurance = (): JSX.Element => {
-  const result = {
-    employer: 0,
-    employee: 0,
-    bossTable:null as any,
-    empTable:null as any
-  };
+
  
   const [inputState, setInputState] = useState<InputState>(initialState);
-  const [resultState, setResultState] = useState<any>(result);
-  const [displayBreakdown,setDisplayBreakdown] = useState<boolean>(false);
-  
-  useEffect(() => {
-    
-    
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputState,displayBreakdown]);
-  useEffect(()=>{
-
-  },[])
-
  
+  const [displayBreakdown,setDisplayBreakdown] = useState<boolean>(false);
+
+  const dir = window.innerWidth <=500 ? "column":"row"
+  
   return (
     <Paper
       className="myinput"
@@ -76,7 +63,7 @@ export const NationalInsurance = (): JSX.Element => {
       {/* //"#F2F2F7" */}
       
 
-          <Box style={{display:"flex",flexDirection:"row",justifyContent:"flex-start","width":"100%"}}>
+          <Box style={{display:"flex",flexDirection:dir,justifyContent:"flex-start","width":"100%"}}>
       <FormControl style={{marginTop: "16px",marginLeft:"2px",width:"100%"}}>
         <InputLabel style={{fontWeight: "bold", color: "black"}}>
           Pay period
@@ -100,7 +87,7 @@ export const NationalInsurance = (): JSX.Element => {
       <TextField
         label="Gross pay"
         type="number"
-        style={{marginTop: "15px", background: "white","width":"100%",marginLeft:"10px"}}
+        style={{marginTop: "15px", background: "white","width":"100%",marginLeft:dir=="column"?"0px":"10px"}}
         InputLabelProps={{
           shrink: true,
           style: {color: "black", fontWeight: "bold"},
@@ -115,7 +102,7 @@ export const NationalInsurance = (): JSX.Element => {
         }}
         value={inputState.pay}
       />
-      <FormControl style={{marginTop: "15px","width":"100%",marginLeft:"10px"}}>
+      <FormControl style={{marginTop: "15px","width":"100%",marginLeft:dir=="column"?"0px":"10px"}}>
         <InputLabel style={{color: "black", fontWeight: "bold",marginLeft:"0px"}}>
           Select NICs Category
         </InputLabel>
@@ -287,20 +274,11 @@ export const calculateNI = (
 
 
   for (let i = 0; i < data.length; i++) {
-    const rate = data[i].categories[category as keyof Mapping];
-    const start: number = data[i].start;
-   
-      const end: number = data[i].end;
-
- 
+      const start: number = data[i].start;   
+      const end: number = data[i].end; 
       const taxable:number = Math.max(Math.min(end, pay) - start, 0);
       const contribution = taxable * data[i].categories[category as keyof Mapping];
-      tot += contribution;
-
-  
-    
-
-   
+      tot += contribution;   
   }
  
   return roundUpAll(tot);
