@@ -50,7 +50,7 @@ export const NationalInsurance = (): JSX.Element => {
     <Paper
       className="myinput"
       style={{
-        width: dir=="column"?"80%":"660px",
+        width: dir=="column"?"75%":"660px",
         padding: "20px",
         display: "flex",
         flexDirection: "column",
