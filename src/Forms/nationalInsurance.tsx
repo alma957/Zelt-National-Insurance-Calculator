@@ -29,7 +29,7 @@ import {
   
 } from "@mui/material";
 import "../App.css";
-import { validateLocaleAndSetLanguage } from "typescript";
+
 
 
 
@@ -44,13 +44,13 @@ export const NationalInsurance = (): JSX.Element => {
  
   const [displayBreakdown,setDisplayBreakdown] = useState<boolean>(false);
 
-  const dir = window.innerWidth <=500 ? "column":"row"
+  const dir = window.innerWidth <=660 ? "column":"row"
   
   return (
     <Paper
       className="myinput"
       style={{
-        width: "660px",
+        width: dir=="column"?"80%":"660px",
         padding: "20px",
         display: "flex",
         flexDirection: "column",
@@ -64,11 +64,12 @@ export const NationalInsurance = (): JSX.Element => {
       
 
           <Box style={{display:"flex",flexDirection:dir,justifyContent:"flex-start","width":"100%"}}>
-      <FormControl style={{marginTop: "16px",marginLeft:"2px",width:"100%"}}>
-        <InputLabel style={{fontWeight: "bold", color: "black"}}>
+      <FormControl size="small" style={{marginTop: "16px",marginLeft:"2px",width:"100%"}}>
+        <InputLabel size="small" style={{fontWeight: "bold", color: "black"}}>
           Pay period
         </InputLabel>
         <Select
+          size="small"
           label="Pay period"
           style={{background: "white","width":"100%"}}
           value={inputState.payPeriod}
@@ -86,6 +87,7 @@ export const NationalInsurance = (): JSX.Element => {
       </FormControl>
       <TextField
         label="Gross pay"
+        size="small"
         type="number"
         style={{marginTop: "15px", background: "white","width":"100%",marginLeft:dir=="column"?"0px":"10px"}}
         InputLabelProps={{
@@ -107,6 +109,7 @@ export const NationalInsurance = (): JSX.Element => {
           Select NICs Category
         </InputLabel>
         <Select
+        size="small"
           inputProps={{}}
           input={<OutlinedInput label="Select NICs Category" style={{marginLeft:"10px"}} />}
           value={inputState.category}

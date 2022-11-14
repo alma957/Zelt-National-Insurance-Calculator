@@ -16,11 +16,11 @@ export const OutputTable = ({pay,category}:any): JSX.Element => {
             rows.push({"employee":calculateNI(pay,category,employeeRates,months[i]), "employer":calculateNI(pay,category,employerData,months[i])})
     }
     rows.push({"employee":rows.reduce((a,b)=>a+b["employee"],0),"employer":rows.reduce((a,b)=>a+b["employer"],0)})
-    
+    const dir = window.innerWidth <=660 ? "column":"row"
     return (
         
        
-        <TableContainer  component={Paper} style={{width:"60%",marginLeft:"120px"}}>
+        <TableContainer  component={Paper} style={dir=="column"?{width:"100%",marginLeft:"0px"}:{width:"60%",marginLeft:"120px"}}>
         <Table size="small" >
              <TableHead>
             <TableRow >
