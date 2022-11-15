@@ -89,6 +89,7 @@ export const NationalInsurance = (): JSX.Element => {
         label="Gross pay"
         size="small"
         type="number"
+        
         style={{marginTop: "15px", background: "white","width":"100%",marginLeft:dir=="column"?"0px":"10px"}}
         InputLabelProps={{
           shrink: true,
@@ -96,7 +97,11 @@ export const NationalInsurance = (): JSX.Element => {
         }}
         InputProps={{
           startAdornment: <InputAdornment position="start">£</InputAdornment>,
-          inputProps: {min: 0},
+          inputProps: {min: 0,step:"0.01"},
+        
+          
+          
+          
         }}
         onChange={e => {
           inputState.pay = parseFloat(e.target.value);
