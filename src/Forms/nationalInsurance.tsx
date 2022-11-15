@@ -44,7 +44,7 @@ export const NationalInsurance = (): JSX.Element => {
  
   const [displayBreakdown,setDisplayBreakdown] = useState<boolean>(false);
 
-  const dir = window.innerWidth <=660 ? "column":"row"
+  const dir = window.innerWidth <=760 ? "column":"row"
   
   return (
     <Paper
@@ -63,7 +63,7 @@ export const NationalInsurance = (): JSX.Element => {
       {/* //"#F2F2F7" */}
       
 
-          <Box style={{display:"flex",flexDirection:dir,justifyContent:"flex-start","width":"100%"}}>
+    <Box style={{display:"flex",flexDirection:dir,justifyContent:"flex-start","width":"100%"}}>
       <FormControl size="small" style={{marginTop: "16px",marginLeft:"2px",width:"100%"}}>
         <InputLabel size="small" style={{fontWeight: "bold", color: "black"}}>
           Pay period
