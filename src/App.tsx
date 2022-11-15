@@ -4,7 +4,7 @@ import {Box} from "@mui/material";
 function App() {
   
   return (
-    <Box style={window.screen.width<760 ? {width:window.screen.width*0.9}:{}}>
+    <Box style={window.screen.width<740 ? {width:window.screen.width*0.9}:{}}>
       <NationalInsurance />
     </Box>
   );

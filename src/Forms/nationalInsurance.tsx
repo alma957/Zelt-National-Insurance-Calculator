@@ -44,7 +44,7 @@ export const NationalInsurance = (): JSX.Element => {
  
   const [displayBreakdown,setDisplayBreakdown] = useState<boolean>(false);
 
-  const dir = window.innerWidth <=760 ? "column":"row"
+  const dir = window.innerWidth <740 ? "column":"row"
   
   return (
     <Paper
