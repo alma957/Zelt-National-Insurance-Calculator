@@ -5,6 +5,27 @@ export interface InputState {
   category: string;
 
 }
+export const multiplier: mult = {
+  annually: 1 / 12,
+  monthly: 1,
+  weekly: 52 / 12,
+  daily: 365 / 12,
+};
+export interface mult {
+  annually: number;
+  monthly: number;
+  weekly: number;
+  daily: number;
+}
+export interface BreakdownTable {
+  income:Array<number|null>;
+  rate:Array<number|null>;
+  contr:Array<number|null>;
+  incomeBand:Array<{
+    start:number,
+    end:number
+  }|string>
+}
 export const initialState: InputState = {
   validDate: true,
   payPeriod: "monthly",
@@ -333,24 +354,3 @@ export const employerData: RatesType = {
   ]
 };
 
-export const multiplier: mult = {
-  annually: 1 / 12,
-  monthly: 1,
-  weekly: 52 / 12,
-  daily: 365 / 12,
-};
-export interface mult {
-  annually: number;
-  monthly: number;
-  weekly: number;
-  daily: number;
-}
-export interface BreakdownTable {
-  income:Array<number|null>;
-  rate:Array<number|null>;
-  contr:Array<number|null>;
-  incomeBand:Array<{
-    start:number,
-    end:number
-  }|string>
-}

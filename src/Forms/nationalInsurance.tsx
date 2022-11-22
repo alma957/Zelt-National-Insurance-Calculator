@@ -44,7 +44,7 @@ export const NationalInsurance = (): JSX.Element => {
  
   const [displayBreakdown,setDisplayBreakdown] = useState<boolean>(false);
 
-  const dir = window.innerWidth <740 ? "column":"row"
+  const dir = window.innerWidth <720 ? "column":"row"
   
   return (
     <Paper
@@ -152,31 +152,19 @@ export const NationalInsurance = (): JSX.Element => {
       
       
         <Fade in={displayBreakdown} unmountOnExit>
-        <Box style={{display:"flex",flexDirection:"row",marginTop:"20px"}}>
-       
-     
-    
-     
-        
+        <Box style={{display:"flex",flexDirection:"row",marginTop:"20px"}}>       
         <OutputTable pay={inputState.pay * multiplier[inputState.payPeriod as keyof mult]} category = {inputState.category}/>
-      
-      
         </Box>
         </Fade>
-        
-        <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
-  
-      <Box style={{textAlign:"center",width:"100%",marginTop:"20px"}}>       
+       <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
+       <Box style={{textAlign:"center",width:"100%",marginTop:"20px"}}>       
       <FormLabel style={{ color: "black",marginLeft:"10px",textDecoration:"none"}}>
       Display breakdown
         </FormLabel>
         <Switch
           onChange={e => {
             setDisplayBreakdown(e.target.checked);
-            
-
-          
-            
+                      
           }}
           value={displayBreakdown}
         />
