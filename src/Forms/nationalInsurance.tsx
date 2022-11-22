@@ -42,7 +42,7 @@ export const NationalInsurance = (): JSX.Element => {
  
   const [inputState, setInputState] = useState<InputState>(initialState);
  
-  const [displayBreakdown,setDisplayBreakdown] = useState<boolean>(false);
+  const [displayBreakdown,setDisplayBreakdown] = useState<boolean>(true);
 
   const dir = window.innerWidth <720 ? "column":"row"
   
@@ -151,12 +151,12 @@ export const NationalInsurance = (): JSX.Element => {
     </Box>
       
       
-        <Fade in={displayBreakdown} unmountOnExit>
+        {/* <Fade in={displayBreakdown} unmountOnExit> */}
         <Box style={{display:"flex",flexDirection:"row",marginTop:"20px"}}>       
         <OutputTable pay={inputState.pay * multiplier[inputState.payPeriod as keyof mult]} category = {inputState.category}/>
         </Box>
-        </Fade>
-       <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
+        {/* </Fade> */}
+       {/* <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
        <Box style={{textAlign:"center",width:"100%",marginTop:"20px"}}>       
       <FormLabel style={{ color: "black",marginLeft:"10px",textDecoration:"none"}}>
       Display breakdown
@@ -170,7 +170,7 @@ export const NationalInsurance = (): JSX.Element => {
         />
         </Box>
 
-        </Box>
+        </Box> */}
         
    
     

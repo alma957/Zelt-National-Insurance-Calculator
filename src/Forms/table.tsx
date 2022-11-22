@@ -24,7 +24,7 @@ export const OutputTable = ({pay,category}:any): JSX.Element => {
         <Table size="small" >
              <TableHead>
             <TableRow >
-            <TableCell  style={{fontWeight:"bold",fontSize:"x-small"}} align="left">Month</TableCell> 
+            <TableCell  style={{fontWeight:"bold",fontSize:"small"}} align="left">Month</TableCell> 
             <TableCell style={{fontWeight:"bold",fontSize:"x-small"}} align="left">Employee deductions</TableCell> 
             <TableCell style={{fontWeight:"bold",fontSize:"x-small"}} align="left">Employer contributions</TableCell> 
             
@@ -37,9 +37,9 @@ export const OutputTable = ({pay,category}:any): JSX.Element => {
               sx={{ '&:last-child td, &:last-child th': { border: 0,backgroundColor:"#D3D3D3",fontWeight:"bold",fontSize:"small" } }}
             >
       
-              <TableCell style={{width:'25%', fontSize:ind===12?"normal": "x-small"}} align="left">{months[ind]}</TableCell>
-              <TableCell style={{width:'37.5%',fontSize:ind===12?"normal": "x-small"}} align="left">£{currencyFormat((rows[ind])["employee"]) as string}</TableCell>
-              <TableCell style={{width:'37.5%',fontSize:ind===12?"normal": "x-small"}} align="left">£{currencyFormat((rows[ind]["employer"])) as string}</TableCell>
+              <TableCell style={{width:'25%', fontSize:ind===12?"normal": "small"}} align="left">{months[ind]}</TableCell>
+              <TableCell style={{width:'37.5%',fontSize:ind===12?"normal": "small"}} align="left">£{currencyFormat((rows[ind])["employee"]) as string}</TableCell>
+              <TableCell style={{width:'37.5%',fontSize:ind===12?"normal": "small"}} align="left">£{currencyFormat((rows[ind]["employer"])) as string}</TableCell>
               
              
             </TableRow>
