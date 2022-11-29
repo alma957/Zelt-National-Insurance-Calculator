@@ -185,12 +185,12 @@ export const NationalInsurance = (): JSX.Element => {
         </Box>
       <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
       <p style={{textDecoration: "none", fontWeight: "bold"}}>
-      {director? "Director's NIC":"Employee's Monthly NIC"}: £{director? currencyFormat(calculateAnnualDirectorEmployeeNic(inputState.pay* multiplier[inputState.payPeriod as keyof mult],directorRatesByCategory[inputState.category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData)) : currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employeeRates,director))}
+      {director? "Director's NIC":"Employee's monthly NIC"}: £{director? currencyFormat(calculateAnnualDirectorEmployeeNic(inputState.pay* multiplier[inputState.payPeriod as keyof mult],directorRatesByCategory[inputState.category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData)) : currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employeeRates,director))}
      
         
       </p>
     <p style={{textDecoration: "none", fontWeight: "bold"}}>
-    {director? "Company's NIC":"Employer's Monthly NIC"}: £{director ? currencyFormat(calculateAnnualCompanyNic(inputState.pay * multiplier[inputState.payPeriod as keyof mult]*12,directorRatesByCategory[inputState.category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData )) : currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employerData,director))}
+    {director? "Company's NIC":"Employer's monthly NIC"}: £{director ? currencyFormat(calculateAnnualCompanyNic(inputState.pay * multiplier[inputState.payPeriod as keyof mult]*12,directorRatesByCategory[inputState.category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData )) : currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employerData,director))}
     </p>
 
     </Box>
@@ -250,31 +250,31 @@ export const calculateNI = (
  
   
     switch(month) {
-    case "Apr":
+    case "Apr-22":
       data  = rates.firstPeriod
       break;
-    case "May":
+    case "May-22":
       data  = rates.firstPeriod
       break;
-    case "Jun":
+    case "Jun-22":
       data  = rates.firstPeriod
       break;
-    case "Jul":
+    case "Jul-22":
       data  = rates.secondPeriod
       break;
-    case "Aug":
+    case "Aug-22":
       data  = rates.secondPeriod
       break;
-    case "Sep":
+    case "Sep-22":
       data  = rates.secondPeriod
       break;
-    case "Oct":
+    case "Oct-22":
       data  = rates.secondPeriod
       break;
-    case "Nov":
+    case "Nov-22":
       data  = rates.thirdPeriod
       break;
-    case "Dec":
+    case "Dec-22":
       data  = rates.thirdPeriod
       break;
     case "Jan-23":
@@ -330,7 +330,6 @@ export const calculateDirectorNic = (totPay:number, rates:AnnualDirectorData,per
   let employee_amount = between_pay_uel * rates["rates"][period as keyof DirRates].upper_earning_limit + between_pay_pt *  rates["rates"][period as keyof DirRates].primary_threshold  
 
   
- //console.log("employee amount ",employee_amount," pay ",pay," between pay pt ",between_pay_pt," between pay uel ",between_pay_uel)
   return (employee_amount-totPaid);
 
 }
@@ -346,7 +345,7 @@ export const calculateAnnualCompanyNic = (totPay:number,rates:AnnualDirectorData
 export const calculateCompanyDirNic = (totPay:number, rates:AnnualDirectorData,period:string,totPaid:number) => {
   const between_pay_st = Math.max((totPay - rates.secondary_threshold),0) 
   let comp_amount = between_pay_st * rates.rates[period as keyof DirRates].secondary_threshold   
-  console.log("tot paid ",totPaid, " amount ",comp_amount)
+
   return (comp_amount - totPaid)
 
 

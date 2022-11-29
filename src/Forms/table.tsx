@@ -9,16 +9,16 @@ export const OutputTable = ({director,pay,category,calculationType}:any): JSX.El
     const rows:Array<any> = []
     const rates = directorRatesByCategory[category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData
    // Employer NI contribution: £{currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employerData))}
-    const months = ["Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan-23","Feb-23","Mar-23","Total"]
+    const months = ["Apr-22","May-22","Jun-22","Jul-22","Aug-22","Sep-22","Oct-22","Nov-22","Dec-22","Jan-23","Feb-23","Mar-23","Total"]
 if(!director) {
     for (let i=0;i<months.length-1;i++) {       
             rows.push({"employee":calculateNI(pay,category,employeeRates,false,months[i]), "employer":calculateNI(pay,category,employerData,false,months[i])})
     }
   } else {
     if (calculationType==="standard") {
-    for (let i=0;i<months.length-1;i++) {   
-      const emp = calculateCompanyDirNic(pay*(i+1),rates,i<=6?"first_period":"second_period",i>0?rows.reduce((a,b)=>a+b['employer'],0):0)    
-      rows.push({"employee":calculateDirectorNic(pay*(i+1),rates,i<=6?"first_period":"second_period",i>0?rows.reduce((a,b)=>a+b['employee'],0):0), "employer":emp})
+        for (let i=0;i<months.length-1;i++) {   
+          const emp = calculateCompanyDirNic(pay*(i+1),rates,i<=6?"first_period":"second_period",i>0?rows.reduce((a,b)=>a+b['employer'],0):0)    
+          rows.push({"employee":calculateDirectorNic(pay*(i+1),rates,i<=6?"first_period":"second_period",i>0?rows.reduce((a,b)=>a+b['employee'],0):0), "employer":emp})
     }
     //rows.push({"employee":calculateAnnualDirectorEmployeeNic(pay,directorRates), "employer":calculateAnnualDirectorCompanyNic(pay*12,directorRatesByCategory[category as keyof AnnualDirectorDataByCategory] )})
   } else {
