@@ -3,6 +3,7 @@ export interface InputState {
   payPeriod: string;
   pay: number;
   category: string;
+  calculationType: string;
 
 }
 export const multiplier: mult = {
@@ -31,6 +32,7 @@ export const initialState: InputState = {
   payPeriod: "monthly",
   pay: 2500,
   category: "A",
+  calculationType:"standard"
 };
 export interface RatesType {
   firstPeriod: Array<Rates>;
@@ -354,3 +356,102 @@ export const employerData: RatesType = {
   ]
 };
 
+
+export const directorRates:AnnualDirectorData = {
+  primary_threshold:11908,
+  upper_earning_limit:50270,
+  secondary_threshold:9100,
+  rates:{
+    first_period:{
+      primary_threshold:0.1325,
+      upper_earning_limit:0.0325,
+      secondary_threshold:0.1505
+    },
+    second_period:
+    {
+      primary_threshold:0.1273,
+      upper_earning_limit:0.0273,
+      secondary_threshold:0.1453
+    }
+  }
+}
+export const directorRates_f_i_l_s:AnnualDirectorData = {
+  primary_threshold:11908,
+  upper_earning_limit:50270,
+  secondary_threshold:25000,
+  rates:{
+    first_period:{
+      primary_threshold:0.1325,
+      upper_earning_limit:0.0325,
+      secondary_threshold:0.1505
+    },
+    second_period:
+    {
+      primary_threshold:0.1273,
+      upper_earning_limit:0.0273,
+      secondary_threshold:0.1453
+    }
+  }
+}
+export const directorRates_h_m_z_v:AnnualDirectorData = {
+  primary_threshold:11908,
+  upper_earning_limit:50270,
+  secondary_threshold:50270,
+  rates:{
+    first_period:{
+      primary_threshold:0.1325,
+      upper_earning_limit:0.0325,
+      secondary_threshold:0.1505
+    },
+    second_period:
+    {
+      primary_threshold:0.1273,
+      upper_earning_limit:0.0273,
+      secondary_threshold:0.1453
+    }
+  }
+}
+export interface AnnualDirectorDataByCategory  {
+  "A":AnnualDirectorData;
+  "B":AnnualDirectorData;
+  "C":AnnualDirectorData;
+  "F":AnnualDirectorData;
+  "H":AnnualDirectorData;
+  "I":AnnualDirectorData;
+  "J":AnnualDirectorData;
+  "L":AnnualDirectorData;
+  "M":AnnualDirectorData;
+  "S":AnnualDirectorData;
+  "V":AnnualDirectorData;
+  "Z":AnnualDirectorData;
+}
+export const directorRatesByCategory:AnnualDirectorDataByCategory={
+  "A":directorRates,
+  "B":directorRates,
+  "C":directorRates,
+  "F":directorRates_f_i_l_s,
+  "H":directorRates_h_m_z_v,
+  "I":directorRates_f_i_l_s,
+  "J":directorRates,
+  "L":directorRates_f_i_l_s,
+  "M":directorRates_h_m_z_v,
+  "S":directorRates_f_i_l_s,
+  "V":directorRates_h_m_z_v,
+  "Z":directorRates_h_m_z_v,
+}
+ 
+export interface AnnualDirectorData {
+  primary_threshold:number;
+  upper_earning_limit:number;
+  secondary_threshold:number;
+  rates:DirRates;
+}
+export interface DirRates {
+  first_period:DirectorRatesPeriod;
+  second_period:DirectorRatesPeriod;
+}
+export interface DirectorRatesPeriod {
+  primary_threshold:number;
+  upper_earning_limit:number;
+  secondary_threshold:number;
+}

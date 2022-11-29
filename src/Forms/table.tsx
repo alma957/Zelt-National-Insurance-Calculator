@@ -1,8 +1,7 @@
 import {  Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
-
-import {currencyFormat,calculateNI} from "./nationalInsurance"
-import { employeeRates,employerData} from "./variables"
-export const OutputTable = ({pay,category}:any): JSX.Element => {
+import {currencyFormat,calculateNI,calculateAnnualDirectorCompanyNic,calculateAnnualDirectorEmployeeNic} from "./nationalInsurance"
+import { employeeRates,employerData,RatesType,directorRates,directorRatesByCategory,AnnualDirectorDataByCategory} from "./variables"
+export const OutputTable = ({director,pay,category,calculationType}:any): JSX.Element => {
  
    
   
@@ -11,10 +10,26 @@ export const OutputTable = ({pay,category}:any): JSX.Element => {
     
    // Employer NI contribution: £{currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employerData))}
     const months = ["Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan-23","Feb-23","Mar-23","Total"]
-
+if(!director) {
     for (let i=0;i<months.length-1;i++) {       
-            rows.push({"employee":calculateNI(pay,category,employeeRates,months[i]), "employer":calculateNI(pay,category,employerData,months[i])})
+            rows.push({"employee":calculateNI(pay,category,employeeRates,false,months[i]), "employer":calculateNI(pay,category,employerData,false,months[i])})
     }
+  } else {
+    if (calculationType==="standard") {
+    for (let i=0;i<months.length-2;i++) {       
+      rows.push({"employee":0, "employer":0})
+    }
+    rows.push({"employee":calculateAnnualDirectorEmployeeNic(pay,directorRates), "employer":calculateAnnualDirectorCompanyNic(pay*12,directorRatesByCategory[category as keyof AnnualDirectorDataByCategory] )})
+  } else {
+    for (let i=0;i<months.length-1;i++) {       
+      rows.push({"employee":calculateAnnualDirectorEmployeeNic(pay,directorRates), "employer":calculateAnnualDirectorEmployeeNic(pay,directorRatesByCategory[category as keyof AnnualDirectorDataByCategory] )})
+    }
+    for (let i=0;i<months.length-1;i++) {       
+      rows.push({"employee":calculateAnnualDirectorEmployeeNic(pay,directorRates), "employer":calculateAnnualDirectorEmployeeNic(pay,directorRates)})
+    }
+    }
+
+  }
     rows.push({"employee":rows.reduce((a,b)=>a+b["employee"],0),"employer":rows.reduce((a,b)=>a+b["employer"],0)})
     const dir = window.innerWidth <=660 ? "column":"row"
     return (

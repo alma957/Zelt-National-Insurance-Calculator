@@ -7,7 +7,12 @@ import {
   RatesType,
   Mapping,
   multiplier,
-  mult
+  mult,
+  directorRates,
+  AnnualDirectorData,
+  DirRates,
+  directorRatesByCategory,
+  AnnualDirectorDataByCategory
 
 } from "./variables";
 import {
@@ -42,7 +47,7 @@ export const NationalInsurance = (): JSX.Element => {
  
   const [inputState, setInputState] = useState<InputState>(initialState);
  
-  const [displayBreakdown,setDisplayBreakdown] = useState<boolean>(true);
+  const [director,setDirector] = useState<boolean>(false);
 
   const dir = window.innerWidth <720 ? "column":"row"
   
@@ -132,45 +137,69 @@ export const NationalInsurance = (): JSX.Element => {
           <MenuItem value="I">I</MenuItem>
           <MenuItem value="J">J</MenuItem>
           <MenuItem value="L">L</MenuItem>
+          <MenuItem value="M">M</MenuItem>
           <MenuItem value="S">S</MenuItem>
           <MenuItem value="V">V</MenuItem>
           <MenuItem value="Z">Z</MenuItem>
         </Select>
       </FormControl>
+      <FormControl style={{marginTop: "15px","width":"100%",marginLeft:dir=="column"?"0px":"10px"}}>
+        <InputLabel style={{color: "black", fontWeight: "bold",marginLeft:"0px"}} >
+          Calculation method
+        </InputLabel>
+        <Select
+        disabled={!director}
+        size="small"
+          inputProps={{}}
+          input={<OutlinedInput label="Select NICs Category" style={{marginLeft:"10px"}} />}
+          value={inputState.calculationType}
+          style={{background: "white","width":"100%"}}
+          onChange={e => {
+            inputState.calculationType = e.target.value;
+            setInputState({...inputState});
+          }}
+        >
+          <MenuItem value="standard">Standard</MenuItem>
+          {/* <MenuItem value="alternative">Alternative</MenuItem> */}
+          
+        </Select>
+      </FormControl>
       </Box>
+             <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
+       <Box style={{textAlign:"center",width:"100%",marginTop:"20px"}}>       
+      <FormLabel style={{ color: "black",marginLeft:"10px",textDecoration:"none"}}>
+      Company Director
+        </FormLabel>
+        <Switch
+          onChange={e => {
+            
+            setDirector(!director)
+                      
+          }}
+          value={director}
+        />
+        </Box>
+
+        </Box>
       <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
       <p style={{textDecoration: "none", fontWeight: "bold"}}>
-      Employee NI deduction: £{currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employeeRates))}
+      Employee NI deduction: £{director? currencyFormat(calculateAnnualDirectorEmployeeNic(inputState.pay* multiplier[inputState.payPeriod as keyof mult],directorRatesByCategory[inputState.category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData)) : currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employeeRates,director))}
      
         
       </p>
     <p style={{textDecoration: "none", fontWeight: "bold"}}>
-    Employer NI contribution: £{currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employerData))}
+    Employer NI contribution: £{director ? currencyFormat(calculateAnnualDirectorCompanyNic(inputState.pay * multiplier[inputState.payPeriod as keyof mult]*12,directorRatesByCategory[inputState.category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData )) : currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employerData,director))}
     </p>
 
     </Box>
+
       
-      
-        {/* <Fade in={displayBreakdown} unmountOnExit> */}
+        {/* <Fade in={director} unmountOnExit> */}
         <Box style={{display:"flex",flexDirection:"row",marginTop:"20px"}}>       
-        <OutputTable pay={inputState.pay * multiplier[inputState.payPeriod as keyof mult]} category = {inputState.category}/>
+        <OutputTable  director={director} pay={inputState.pay * multiplier[inputState.payPeriod as keyof mult]} calculationType={inputState.calculationType} category = {inputState.category}/>
         </Box>
         {/* </Fade> */}
-       {/* <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
-       <Box style={{textAlign:"center",width:"100%",marginTop:"20px"}}>       
-      <FormLabel style={{ color: "black",marginLeft:"10px",textDecoration:"none"}}>
-      Display breakdown
-        </FormLabel>
-        <Switch
-          onChange={e => {
-            setDisplayBreakdown(e.target.checked);
-                      
-          }}
-          value={displayBreakdown}
-        />
-        </Box>
-
-        </Box> */}
+      
         
    
     
@@ -212,6 +241,7 @@ export const calculateNI = (
   pay: number,
   category: string,
   rates: RatesType,    
+  director:boolean,
   month?:string
 ) => {
   let data = rates.thirdPeriod;
@@ -263,12 +293,6 @@ export const calculateNI = (
   
   
   let tot = 0;
- 
- 
-
- 
-
-
   for (let i = 0; i < data.length; i++) {
       const start: number = data[i].start;   
       const end: number = data[i].end; 
@@ -279,3 +303,41 @@ export const calculateNI = (
  
   return roundUpAll(tot);
 };
+export const calculateAnnualDirectorEmployeeNic = (pay:number,rates:AnnualDirectorData) => {
+  let employee_amount = 0;
+
+  let totPay = pay;
+  
+  for (let i=0;i < 7;i++) {
+    const res = calculateDirectorNic(totPay,pay,rates,"second_period")
+    employee_amount+=res
+    
+    totPay+=pay
+  }
+  for (let i=0;i < 5;i++) {
+    const res = calculateDirectorNic(totPay,pay,rates,"second_period")
+    employee_amount+=res    
+    totPay+=pay
+  }
+  return employee_amount
+}
+export const calculateDirectorNic = (totPay:number, pay:number,rates:AnnualDirectorData,period:string) => {
+  
+  const between_pay_uel = Math.max(totPay-rates.upper_earning_limit,0)
+  const between_pay_pt =  Math.max(totPay-rates.primary_threshold - between_pay_uel,0)  
+  let employee_amount = between_pay_uel > 0 ? Math.min(pay,between_pay_uel) * rates["rates"][period as keyof DirRates].upper_earning_limit : 0
+  employee_amount += between_pay_pt > 0 ? between_pay_uel > 0 ? Math.max(pay - between_pay_uel,0) * rates["rates"][period as keyof DirRates].primary_threshold : Math.min(pay,between_pay_pt) * rates["rates"][period as keyof DirRates].primary_threshold: 0
+
+
+  
+ //console.log("employee amount ",employee_amount," pay ",pay," between pay pt ",between_pay_pt," between pay uel ",between_pay_uel)
+  return employee_amount;
+
+}
+
+export const calculateAnnualDirectorCompanyNic = (totPay:number,rates:AnnualDirectorData) =>{
+    const between_pay_uel = Math.max((totPay - rates.secondary_threshold),0) * rates.rates.second_period.secondary_threshold
+   
+    return between_pay_uel
+}
+
