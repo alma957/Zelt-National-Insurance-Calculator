@@ -41,7 +41,7 @@ if(!director) {
             <TableRow >
             <TableCell  style={{fontWeight:"bold",fontSize:"small"}} align="left">Month</TableCell> 
             <TableCell style={{fontWeight:"bold",fontSize:"x-small"}} align="left">{director? "Director's NIC":"Employee's NIC"}</TableCell> 
-            <TableCell style={{fontWeight:"bold",fontSize:"x-small"}} align="left">{director? "Company's NIC":"Employer's NIC"}</TableCell> 
+            <TableCell style={{fontWeight:"bold",fontSize:"x-small"}} align="left">{"Employer's NIC"}</TableCell> 
             
             </TableRow>
              </TableHead>

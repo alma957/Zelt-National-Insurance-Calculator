@@ -183,17 +183,7 @@ export const NationalInsurance = (): JSX.Element => {
         </Box>
 
         </Box>
-      <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
-      <p style={{textDecoration: "none", fontWeight: "bold"}}>
-      {director? "Director's NIC":"Employee's monthly NIC"}: {director? currencyFormat(calculateAnnualDirectorEmployeeNic(inputState.pay* multiplier[inputState.payPeriod as keyof mult],directorRatesByCategory[inputState.category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData)) : currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employeeRates,director))}
-     
-        
-      </p>
-    <p style={{textDecoration: "none", fontWeight: "bold"}}>
-    {director? "Company's NIC":"Employer's monthly NIC"}: {director ? currencyFormat(calculateAnnualCompanyNic(inputState.pay * multiplier[inputState.payPeriod as keyof mult]*12,directorRatesByCategory[inputState.category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData )) : currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employerData,director))}
-    </p>
-
-    </Box>
+      
 
       
         {/* <Fade in={director} unmountOnExit> */}
