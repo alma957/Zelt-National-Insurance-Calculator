@@ -53,8 +53,8 @@ if(!director) {
             >
       
               <TableCell style={{width:'25%', fontSize:ind===12?"normal": "small"}} align="left">{months[ind]}</TableCell>
-              <TableCell style={{width:'37.5%',fontSize:ind===12?"normal": "small"}} align="left">£{currencyFormat((rows[ind])["employee"]) as string}</TableCell>
-              <TableCell style={{width:'37.5%',fontSize:ind===12?"normal": "small"}} align="left">£{currencyFormat((rows[ind]["employer"])) as string}</TableCell>
+              <TableCell style={{width:'37.5%',fontSize:ind===12?"normal": "small"}} align="left">{currencyFormat((rows[ind])["employee"]) as string}</TableCell>
+              <TableCell style={{width:'37.5%',fontSize:ind===12?"normal": "small"}} align="left">{currencyFormat((rows[ind]["employer"])) as string}</TableCell>
               
              
             </TableRow>

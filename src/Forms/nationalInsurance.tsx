@@ -185,12 +185,12 @@ export const NationalInsurance = (): JSX.Element => {
         </Box>
       <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
       <p style={{textDecoration: "none", fontWeight: "bold"}}>
-      {director? "Director's NIC":"Employee's monthly NIC"}: £{director? currencyFormat(calculateAnnualDirectorEmployeeNic(inputState.pay* multiplier[inputState.payPeriod as keyof mult],directorRatesByCategory[inputState.category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData)) : currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employeeRates,director))}
+      {director? "Director's NIC":"Employee's monthly NIC"}: {director? currencyFormat(calculateAnnualDirectorEmployeeNic(inputState.pay* multiplier[inputState.payPeriod as keyof mult],directorRatesByCategory[inputState.category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData)) : currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employeeRates,director))}
      
         
       </p>
     <p style={{textDecoration: "none", fontWeight: "bold"}}>
-    {director? "Company's NIC":"Employer's monthly NIC"}: £{director ? currencyFormat(calculateAnnualCompanyNic(inputState.pay * multiplier[inputState.payPeriod as keyof mult]*12,directorRatesByCategory[inputState.category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData )) : currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employerData,director))}
+    {director? "Company's NIC":"Employer's monthly NIC"}: {director ? currencyFormat(calculateAnnualCompanyNic(inputState.pay * multiplier[inputState.payPeriod as keyof mult]*12,directorRatesByCategory[inputState.category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData )) : currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employerData,director))}
     </p>
 
     </Box>
@@ -209,7 +209,10 @@ export const NationalInsurance = (): JSX.Element => {
   );
 };
 export const currencyFormat = (num: number): string => {
-  return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  if (num<0) {
+    return "-£"+(-num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")).toString()
+  } 
+  return "£"+num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 };
 
 export const roundUpAll = (original: number): number => {
