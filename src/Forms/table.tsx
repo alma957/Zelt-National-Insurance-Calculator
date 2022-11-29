@@ -1,6 +1,6 @@
 import {  Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
-import {currencyFormat,calculateNI,calculateAnnualDirectorCompanyNic,calculateAnnualDirectorEmployeeNic} from "./nationalInsurance"
-import { employeeRates,employerData,RatesType,directorRates,directorRatesByCategory,AnnualDirectorDataByCategory} from "./variables"
+import {currencyFormat,calculateNI,calculateAnnualCompanyNic,calculateAnnualDirectorEmployeeNic,calculateDirectorNic,calculateCompanyDirNic} from "./nationalInsurance"
+import { employeeRates,employerData,RatesType,directorRates,directorRatesByCategory,AnnualDirectorDataByCategory, AnnualDirectorData} from "./variables"
 export const OutputTable = ({director,pay,category,calculationType}:any): JSX.Element => {
  
    
@@ -16,10 +16,11 @@ if(!director) {
     }
   } else {
     if (calculationType==="standard") {
-    for (let i=0;i<months.length-2;i++) {       
-      rows.push({"employee":0, "employer":0})
+    for (let i=0;i<months.length-1;i++) {   
+      const emp = calculateCompanyDirNic(pay*(i+1),directorRatesByCategory[category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData,i<=6?"first_period":"second_period",i>0?rows.reduce((a,b)=>a+b['employer'],0):0)    
+      rows.push({"employee":calculateDirectorNic(pay*(i+1),directorRatesByCategory[category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData,i<=6?"first_period":"second_period",i>0?rows.reduce((a,b)=>a+b['employee'],0):0), "employer":emp})
     }
-    rows.push({"employee":calculateAnnualDirectorEmployeeNic(pay,directorRates), "employer":calculateAnnualDirectorCompanyNic(pay*12,directorRatesByCategory[category as keyof AnnualDirectorDataByCategory] )})
+    //rows.push({"employee":calculateAnnualDirectorEmployeeNic(pay,directorRates), "employer":calculateAnnualDirectorCompanyNic(pay*12,directorRatesByCategory[category as keyof AnnualDirectorDataByCategory] )})
   } else {
     for (let i=0;i<months.length-1;i++) {       
       rows.push({"employee":calculateAnnualDirectorEmployeeNic(pay,directorRates), "employer":calculateAnnualDirectorEmployeeNic(pay,directorRatesByCategory[category as keyof AnnualDirectorDataByCategory] )})

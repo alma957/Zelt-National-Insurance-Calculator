@@ -357,6 +357,36 @@ export const employerData: RatesType = {
 };
 
 
+
+export interface AnnualDirectorDataByCategory  {
+  "A":AnnualDirectorData;
+  "B":AnnualDirectorData;
+  "C":AnnualDirectorData;
+  "F":AnnualDirectorData;
+  "H":AnnualDirectorData;
+  "I":AnnualDirectorData;
+  "J":AnnualDirectorData;
+  "L":AnnualDirectorData;
+  "M":AnnualDirectorData;
+  "S":AnnualDirectorData;
+  "V":AnnualDirectorData;
+  "Z":AnnualDirectorData;
+}
+export interface AnnualDirectorData {
+  primary_threshold:number;
+  upper_earning_limit:number;
+  secondary_threshold:number;
+  rates:DirRates;
+}
+export interface DirRates {
+  first_period:DirectorRatesPeriod;
+  second_period:DirectorRatesPeriod;
+}
+export interface DirectorRatesPeriod {
+  primary_threshold:number;
+  upper_earning_limit:number;
+  secondary_threshold:number;
+}
 export const directorRates:AnnualDirectorData = {
   primary_threshold:11908,
   upper_earning_limit:50270,
@@ -411,20 +441,6 @@ export const directorRates_h_m_z_v:AnnualDirectorData = {
     }
   }
 }
-export interface AnnualDirectorDataByCategory  {
-  "A":AnnualDirectorData;
-  "B":AnnualDirectorData;
-  "C":AnnualDirectorData;
-  "F":AnnualDirectorData;
-  "H":AnnualDirectorData;
-  "I":AnnualDirectorData;
-  "J":AnnualDirectorData;
-  "L":AnnualDirectorData;
-  "M":AnnualDirectorData;
-  "S":AnnualDirectorData;
-  "V":AnnualDirectorData;
-  "Z":AnnualDirectorData;
-}
 export const directorRatesByCategory:AnnualDirectorDataByCategory={
   "A":directorRates,
   "B":directorRates,
@@ -439,19 +455,4 @@ export const directorRatesByCategory:AnnualDirectorDataByCategory={
   "V":directorRates_h_m_z_v,
   "Z":directorRates_h_m_z_v,
 }
- 
-export interface AnnualDirectorData {
-  primary_threshold:number;
-  upper_earning_limit:number;
-  secondary_threshold:number;
-  rates:DirRates;
-}
-export interface DirRates {
-  first_period:DirectorRatesPeriod;
-  second_period:DirectorRatesPeriod;
-}
-export interface DirectorRatesPeriod {
-  primary_threshold:number;
-  upper_earning_limit:number;
-  secondary_threshold:number;
-}
+

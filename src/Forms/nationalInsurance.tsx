@@ -160,6 +160,7 @@ export const NationalInsurance = (): JSX.Element => {
           }}
         >
           <MenuItem value="standard">Standard</MenuItem>
+          
           {/* <MenuItem value="alternative">Alternative</MenuItem> */}
           
         </Select>
@@ -188,7 +189,7 @@ export const NationalInsurance = (): JSX.Element => {
         
       </p>
     <p style={{textDecoration: "none", fontWeight: "bold"}}>
-    {director? "Company's NIC":"Employer's Monthly NIC"}: £{director ? currencyFormat(calculateAnnualDirectorCompanyNic(inputState.pay * multiplier[inputState.payPeriod as keyof mult]*12,directorRatesByCategory[inputState.category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData )) : currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employerData,director))}
+    {director? "Company's NIC":"Employer's Monthly NIC"}: £{director ? currencyFormat(calculateAnnualCompanyNic(inputState.pay * multiplier[inputState.payPeriod as keyof mult]*12,directorRatesByCategory[inputState.category as keyof AnnualDirectorDataByCategory] as AnnualDirectorData )) : currencyFormat(calculateNI(inputState.pay * multiplier[inputState.payPeriod as keyof mult],inputState.category,employerData,director))}
     </p>
 
     </Box>
@@ -305,39 +306,48 @@ export const calculateNI = (
 };
 export const calculateAnnualDirectorEmployeeNic = (pay:number,rates:AnnualDirectorData) => {
   let employee_amount = 0;
-
-  let totPay = pay;
   
+  let totPay = pay;
+
   for (let i=0;i < 7;i++) {
-    const res = calculateDirectorNic(totPay,pay,rates,"second_period")
+    const res = calculateDirectorNic(totPay,rates,"first_period",employee_amount)
     employee_amount+=res
     
     totPay+=pay
   }
   for (let i=0;i < 5;i++) {
-    const res = calculateDirectorNic(totPay,pay,rates,"second_period")
+    const res = calculateDirectorNic(totPay,rates,"second_period",employee_amount)
     employee_amount+=res    
     totPay+=pay
   }
   return employee_amount
 }
-export const calculateDirectorNic = (totPay:number, pay:number,rates:AnnualDirectorData,period:string) => {
-  
+export const calculateDirectorNic = (totPay:number, rates:AnnualDirectorData,period:string,totPaid:number) => {
+
   const between_pay_uel = Math.max(totPay-rates.upper_earning_limit,0)
   const between_pay_pt =  Math.max(totPay-rates.primary_threshold - between_pay_uel,0)  
-  let employee_amount = between_pay_uel > 0 ? Math.min(pay,between_pay_uel) * rates["rates"][period as keyof DirRates].upper_earning_limit : 0
-  employee_amount += between_pay_pt > 0 ? between_pay_uel > 0 ? Math.max(pay - between_pay_uel,0) * rates["rates"][period as keyof DirRates].primary_threshold : Math.min(pay,between_pay_pt) * rates["rates"][period as keyof DirRates].primary_threshold: 0
-
+  let employee_amount = between_pay_uel * rates["rates"][period as keyof DirRates].upper_earning_limit + between_pay_pt *  rates["rates"][period as keyof DirRates].primary_threshold  
 
   
  //console.log("employee amount ",employee_amount," pay ",pay," between pay pt ",between_pay_pt," between pay uel ",between_pay_uel)
-  return employee_amount;
+  return (employee_amount-totPaid);
 
 }
 
-export const calculateAnnualDirectorCompanyNic = (totPay:number,rates:AnnualDirectorData) =>{
-    const between_pay_uel = Math.max((totPay - rates.secondary_threshold),0) * rates.rates.second_period.secondary_threshold
-   
-    return between_pay_uel
+
+
+
+export const calculateAnnualCompanyNic = (totPay:number,rates:AnnualDirectorData) => {
+  const between_pay_st = Math.max((totPay - rates.secondary_threshold),0) * rates.rates.second_period.secondary_threshold   
+  return between_pay_st
+}
+
+export const calculateCompanyDirNic = (totPay:number, rates:AnnualDirectorData,period:string,totPaid:number) => {
+  const between_pay_st = Math.max((totPay - rates.secondary_threshold),0) 
+  let comp_amount = between_pay_st * rates.rates[period as keyof DirRates].secondary_threshold   
+  console.log("tot paid ",totPaid, " amount ",comp_amount)
+  return (comp_amount - totPaid)
+
+
 }
 
