@@ -160,6 +160,7 @@ export const NationalInsurance = (): JSX.Element => {
           }}
         >
           <MenuItem value="standard">Standard</MenuItem>
+          <MenuItem value="alternative">Alternative</MenuItem>
           
           {/* <MenuItem value="alternative">Alternative</MenuItem> */}
           
