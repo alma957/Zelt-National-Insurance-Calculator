@@ -4,7 +4,9 @@ export interface InputState {
   pay: number;
   category: string;
   calculationType: string;
-
+  directorshipStart:string;
+  proRataThreshold:number;
+  firstPaidMonth:number;
 }
 export const multiplier: mult = {
   annually: 1 / 12,
@@ -32,7 +34,10 @@ export const initialState: InputState = {
   payPeriod: "monthly",
   pay: 2500,
   category: "A",
-  calculationType:"standard"
+  calculationType:"standard",
+  directorshipStart:"2022-04-06",
+  proRataThreshold:1,
+  firstPaidMonth:0
 };
 export interface RatesType {
   firstPeriod: Array<Rates>;

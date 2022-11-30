@@ -47,6 +47,8 @@ export const NationalInsurance = (): JSX.Element => {
 
   useEffect(() => {
     // Update the document title using the browser API
+    let url = document.URL
+    if (url.indexOf("?")!==-1) {
     let paramString = document.URL.split('?')[1];
 let params_arr = paramString.split('&');
 
@@ -59,6 +61,7 @@ for (let i = 0; i < params_arr.length; i++) {
       setDirector(false)
     }
    }
+  }
 }
   
   
@@ -161,6 +164,7 @@ for (let i = 0; i < params_arr.length; i++) {
           <MenuItem value="Z">Z</MenuItem>
         </Select>
       </FormControl>
+     
       <FormControl style={{marginTop: "15px","width":"100%",marginLeft:dir=="column"?"0px":"10px",display:director?"inline":"none"}}>
         <InputLabel style={{color: "black", fontWeight: "bold",marginLeft:"0px"}} >
           Calculation method
@@ -185,7 +189,66 @@ for (let i = 0; i < params_arr.length; i++) {
         </Select>
       </FormControl>
       </Box>
-             <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
+      <Box style={{display:director?"flex":"none",flexDirection:dir,justifyContent:"flex-start","width":"100%"}}>
+        <TextField
+         type="date"
+         size="small"
+         label="Directorship Start"
+         onChange={(e)=>{
+               
+          const oneJan = new Date(2022,3,6);
+       
+          const date = new Date(Math.max(new Date(e.target.value).getTime(),oneJan.getTime()))
+          const  numberOfDays = Math.floor((date.getTime() - oneJan.getTime()) / (24 * 60 * 60 * 1000));
+          const result = Math.round(( date.getDay() + 1 + numberOfDays) / 7)
+  
+          inputState.directorshipStart = e.target.value
+          inputState.proRataThreshold = Math.max((53-result)/52,0)
+   
+          setInputState({...inputState})
+         }}
+         value={inputState.directorshipStart}
+         style={{marginTop: "15px", background: "white","width":"100%"}}
+         InputLabelProps={{
+          shrink: true,
+          style: {color: "black", fontWeight: "bold"},
+        }}
+        >
+          </TextField>
+          <FormControl style={{marginTop: "15px","width":"100%",marginLeft:dir=="column"?"0px":"10px"}}>
+        <InputLabel style={{color: "black", fontWeight: "bold",marginLeft:"0px"}}>
+          First period paid
+        </InputLabel>
+        <Select
+        size="small"
+          inputProps={{}}
+          input={<OutlinedInput label="First period paid" style={{marginLeft:"10px"}} />}
+          value={inputState.firstPaidMonth}
+          style={{background: "white","width":"100%"}}
+          onChange={e => {
+           
+            inputState.firstPaidMonth = e.target.value as number;
+            setInputState({...inputState});
+          }}
+        >
+          <MenuItem value={0}>April-22</MenuItem>
+          <MenuItem value={1}>May-22</MenuItem>
+          <MenuItem value={2}>June-22</MenuItem>
+          <MenuItem value={3}>July-22</MenuItem>
+          <MenuItem value={4}>August-22</MenuItem>
+          <MenuItem value={5}>September-22</MenuItem>
+          <MenuItem value={6}>October-22</MenuItem>
+          <MenuItem value={7}>November-22</MenuItem>
+          <MenuItem value={8}>December-22</MenuItem>
+          <MenuItem value={9}>January-22</MenuItem>
+          <MenuItem value={10}>February-22</MenuItem>
+          <MenuItem value={11}>March-22</MenuItem>
+        </Select>
+      </FormControl>
+
+      
+      </Box>
+      <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
        {/* <Box style={{textAlign:"center",width:"100%",marginTop:"20px",display:}}>       
       <FormLabel style={{ color: "black",marginLeft:"10px",textDecoration:"none"}}>
       Company Director
@@ -207,7 +270,7 @@ for (let i = 0; i < params_arr.length; i++) {
       
         {/* <Fade in={director} unmountOnExit> */}
         <Box style={{display:"flex",flexDirection:"row",marginTop:"20px"}}>       
-        <OutputTable  director={director} pay={inputState.pay * multiplier[inputState.payPeriod as keyof mult]} calculationType={inputState.calculationType} category = {inputState.category}/>
+        <OutputTable firstPeriodPaid={inputState.firstPaidMonth} proRata={inputState.proRataThreshold} director={director} pay={inputState.pay * multiplier[inputState.payPeriod as keyof mult]} calculationType={inputState.calculationType} category = {inputState.category}/>
         </Box>
         {/* </Fade> */}
       
@@ -317,28 +380,29 @@ export const calculateNI = (
  
   return roundUpAll(tot);
 };
-export const calculateAnnualDirectorEmployeeNic = (pay:number,rates:AnnualDirectorData) => {
+export const calculateAnnualDirectorEmployeeNic = (pay:number,rates:AnnualDirectorData,proRata:number) => {
   let employee_amount = 0;
   
   let totPay = pay;
 
   for (let i=0;i < 7;i++) {
-    const res = calculateDirectorNic(totPay,rates,"first_period",employee_amount)
+    const res = calculateDirectorNic(totPay,rates,"first_period",employee_amount,proRata)
     employee_amount+=res
     
     totPay+=pay
   }
   for (let i=0;i < 5;i++) {
-    const res = calculateDirectorNic(totPay,rates,"second_period",employee_amount)
+    const res = calculateDirectorNic(totPay,rates,"second_period",employee_amount,proRata)
     employee_amount+=res    
     totPay+=pay
   }
   return employee_amount
 }
-export const calculateDirectorNic = (totPay:number, rates:AnnualDirectorData,period:string,totPaid:number) => {
+export const calculateDirectorNic = (totPay:number, rates:AnnualDirectorData,period:string,totPaid:number,proRata:number) => {
 
-  const between_pay_uel = Math.max(totPay-rates.upper_earning_limit,0)
-  const between_pay_pt =  Math.max(totPay-rates.primary_threshold - between_pay_uel,0)  
+  const between_pay_uel = Math.max(totPay-rates.upper_earning_limit*proRata,0)
+  const between_pay_pt =  Math.max(totPay-rates.primary_threshold*proRata - between_pay_uel,0)  
+
   let employee_amount = between_pay_uel * rates["rates"][period as keyof DirRates].upper_earning_limit + between_pay_pt *  rates["rates"][period as keyof DirRates].primary_threshold  
 
   
@@ -349,13 +413,15 @@ export const calculateDirectorNic = (totPay:number, rates:AnnualDirectorData,per
 
 
 
-export const calculateAnnualCompanyNic = (totPay:number,rates:AnnualDirectorData) => {
-  const between_pay_st = Math.max((totPay - rates.secondary_threshold),0) * rates.rates.second_period.secondary_threshold   
+export const calculateAnnualCompanyNic = (totPay:number,rates:AnnualDirectorData,proRata:number) => {
+
+  const between_pay_st = Math.max((totPay - rates.secondary_threshold*proRata),0) * rates.rates.second_period.secondary_threshold   
   return between_pay_st
 }
 
-export const calculateCompanyDirNic = (totPay:number, rates:AnnualDirectorData,period:string,totPaid:number) => {
-  const between_pay_st = Math.max((totPay - rates.secondary_threshold),0) 
+export const calculateCompanyDirNic = (totPay:number, rates:AnnualDirectorData,period:string,totPaid:number,proRata:number) => {
+  const between_pay_st = Math.max((totPay - rates.secondary_threshold*proRata),0) 
+
   let comp_amount = between_pay_st * rates.rates[period as keyof DirRates].secondary_threshold   
 
   return (comp_amount - totPaid)
