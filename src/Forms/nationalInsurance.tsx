@@ -47,12 +47,21 @@ export const NationalInsurance = (): JSX.Element => {
 
   useEffect(() => {
     // Update the document title using the browser API
-   const url = document.URL;
-   if (url==="http://localhost:3000/Zelt-National-Insurance-Calculator") {
-    
-    setDirector(true)
-  }
-  console.log("ttest "+window.parent.location['href'])
+    let paramString = document.URL.split('?')[1];
+let params_arr = paramString.split('&');
+
+for (let i = 0; i < params_arr.length; i++) {
+   let pair = params_arr[i].split('=');
+   if (pair[0] === "type") {
+    if (pair[1]==="director") {
+      setDirector(true)
+    } else {
+      setDirector(false)
+    }
+   }
+}
+  
+  
 
 
   },[]);
@@ -152,7 +161,7 @@ export const NationalInsurance = (): JSX.Element => {
           <MenuItem value="Z">Z</MenuItem>
         </Select>
       </FormControl>
-      <FormControl style={{marginTop: "15px","width":"100%",marginLeft:dir=="column"?"0px":"10px"}}>
+      <FormControl style={{marginTop: "15px","width":"100%",marginLeft:dir=="column"?"0px":"10px",display:director?"inline":"none"}}>
         <InputLabel style={{color: "black", fontWeight: "bold",marginLeft:"0px"}} >
           Calculation method
         </InputLabel>
@@ -177,7 +186,7 @@ export const NationalInsurance = (): JSX.Element => {
       </FormControl>
       </Box>
              <Box style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
-       <Box style={{textAlign:"center",width:"100%",marginTop:"20px"}}>       
+       {/* <Box style={{textAlign:"center",width:"100%",marginTop:"20px",display:}}>       
       <FormLabel style={{ color: "black",marginLeft:"10px",textDecoration:"none"}}>
       Company Director
         </FormLabel>
@@ -190,7 +199,7 @@ export const NationalInsurance = (): JSX.Element => {
           checked={director}
           value={director}
         />
-        </Box>
+        </Box> */}
 
         </Box>
       
