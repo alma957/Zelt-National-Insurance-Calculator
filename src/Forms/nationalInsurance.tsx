@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useEffect, useState} from "react";
 import {
   InputState,
   initialState,
@@ -36,15 +36,17 @@ import {
 import "../App.css";
 
 
-
-
 export const perc = (original:number):string=>{
   return (original*100).toFixed(2)+"%"
 }
 
 export const NationalInsurance = (): JSX.Element => {
 
- 
+  useEffect(() => {
+    // Update the document title using the browser API
+   
+   console.log(document.URL)
+  },[]);
   const [inputState, setInputState] = useState<InputState>(initialState);
  
   const [director,setDirector] = useState<boolean>(false);
