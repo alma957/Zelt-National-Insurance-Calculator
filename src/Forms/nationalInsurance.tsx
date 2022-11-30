@@ -46,7 +46,7 @@ export const NationalInsurance = (): JSX.Element => {
   const [director,setDirector] = useState<boolean>(false);
 
   useEffect(() => {
-    // Update the document title using the browser API
+  
     let url = document.URL
     if (url.indexOf("?")!==-1) {
     let paramString = document.URL.split('?')[1];
@@ -217,7 +217,7 @@ for (let i = 0; i < params_arr.length; i++) {
           </TextField>
           <FormControl style={{marginTop: "15px","width":"100%",marginLeft:dir=="column"?"0px":"10px"}}>
         <InputLabel style={{color: "black", fontWeight: "bold",marginLeft:"0px"}}>
-          First period paid
+          First period salary received (in tax year)
         </InputLabel>
         <Select
         size="small"
