@@ -41,16 +41,23 @@ export const perc = (original:number):string=>{
 }
 
 export const NationalInsurance = (): JSX.Element => {
-
-  useEffect(() => {
-    // Update the document title using the browser API
-   
-   console.log(document.URL)
-  },[]);
   const [inputState, setInputState] = useState<InputState>(initialState);
  
   const [director,setDirector] = useState<boolean>(false);
 
+  useEffect(() => {
+    // Update the document title using the browser API
+   const url = document.URL;
+   if (url==="http://localhost:3000/Zelt-National-Insurance-Calculator") {
+    
+    setDirector(true)
+  }
+  console.log("ttest "+window.parent.location['href'])
+
+
+  },[]);
+
+  
   const dir = window.innerWidth <720 ? "column":"row"
   
   return (
@@ -180,6 +187,7 @@ export const NationalInsurance = (): JSX.Element => {
             setDirector(!director)
                       
           }}
+          checked={director}
           value={director}
         />
         </Box>
