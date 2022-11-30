@@ -129,7 +129,7 @@ for (let i = 0; i < params_arr.length; i++) {
           
           
         }}
-        onChange={e => {
+        onChange={e => {          
           inputState.pay = parseFloat(e.target.value);
           setInputState({...inputState});
         }}
@@ -165,7 +165,36 @@ for (let i = 0; i < params_arr.length; i++) {
         </Select>
       </FormControl>
      
-      <FormControl style={{marginTop: "15px","width":"100%",marginLeft:dir=="column"?"0px":"10px",display:director?"inline":"none"}}>
+     
+      </Box>
+      <Box style={{display:director?"flex":"none",flexDirection:dir,justifyContent:"flex-start","width":"100%"}}>
+        <TextField
+         type="date"
+         size="small"
+         label="Directorship Start Date"
+         onChange={(e)=>{
+               
+          const oneJan = new Date(2022,3,6);
+       
+          const date = new Date(Math.max(new Date(e.target.value).getTime(),oneJan.getTime()))
+          const  numberOfDays = Math.floor((date.getTime() - oneJan.getTime()) / (24 * 60 * 60 * 1000));
+          const result = Math.round(( date.getDay() + 1 + numberOfDays) / 7)
+  
+          inputState.directorshipStart = e.target.value
+          inputState.proRataThreshold = Math.max((53-result)/52,0)
+   
+          setInputState({...inputState})
+         }}
+         value={inputState.directorshipStart}
+         style={{marginTop: "15px", background: "white","width":"33%"}}
+         InputLabelProps={{
+          shrink: true,
+          style: {color: "black", fontWeight: "bold"},
+        }}
+        >
+          </TextField>
+
+          <FormControl style={{marginTop: "15px","width":"33%",marginLeft:dir=="column"?"0px":"10px",display:director?"inline":"none"}}>
         <InputLabel style={{color: "black", fontWeight: "bold",marginLeft:"0px"}} >
           Calculation method
         </InputLabel>
@@ -188,63 +217,7 @@ for (let i = 0; i < params_arr.length; i++) {
           
         </Select>
       </FormControl>
-      </Box>
-      <Box style={{display:director?"flex":"none",flexDirection:dir,justifyContent:"flex-start","width":"100%"}}>
-        <TextField
-         type="date"
-         size="small"
-         label="Directorship Start Date"
-         onChange={(e)=>{
-               
-          const oneJan = new Date(2022,3,6);
-       
-          const date = new Date(Math.max(new Date(e.target.value).getTime(),oneJan.getTime()))
-          const  numberOfDays = Math.floor((date.getTime() - oneJan.getTime()) / (24 * 60 * 60 * 1000));
-          const result = Math.round(( date.getDay() + 1 + numberOfDays) / 7)
-  
-          inputState.directorshipStart = e.target.value
-          inputState.proRataThreshold = Math.max((53-result)/52,0)
-   
-          setInputState({...inputState})
-         }}
-         value={inputState.directorshipStart}
-         style={{marginTop: "15px", background: "white","width":"100%"}}
-         InputLabelProps={{
-          shrink: true,
-          style: {color: "black", fontWeight: "bold"},
-        }}
-        >
-          </TextField>
-          <FormControl style={{marginTop: "15px","width":"100%",marginLeft:dir=="column"?"0px":"10px"}}>
-        <InputLabel style={{color: "black", fontWeight: "bold",marginLeft:"0px"}}>
-          First period salary received (in tax year)
-        </InputLabel>
-        <Select
-        size="small"
-          inputProps={{}}
-          input={<OutlinedInput label=" First period salary received (in tax year)" style={{marginLeft:"10px"}} />}
-          value={inputState.firstPaidMonth}
-          style={{background: "white","width":"100%"}}
-          onChange={e => {
-           
-            inputState.firstPaidMonth = e.target.value as number;
-            setInputState({...inputState});
-          }}
-        >
-          <MenuItem value={0}>April-22</MenuItem>
-          <MenuItem value={1}>May-22</MenuItem>
-          <MenuItem value={2}>June-22</MenuItem>
-          <MenuItem value={3}>July-22</MenuItem>
-          <MenuItem value={4}>August-22</MenuItem>
-          <MenuItem value={5}>September-22</MenuItem>
-          <MenuItem value={6}>October-22</MenuItem>
-          <MenuItem value={7}>November-22</MenuItem>
-          <MenuItem value={8}>December-22</MenuItem>
-          <MenuItem value={9}>January-23</MenuItem>
-          <MenuItem value={10}>February-23</MenuItem>
-          <MenuItem value={11}>March-23</MenuItem>
-        </Select>
-      </FormControl>
+        
 
       
       </Box>
@@ -270,7 +243,7 @@ for (let i = 0; i < params_arr.length; i++) {
       
         {/* <Fade in={director} unmountOnExit> */}
         <Box style={{display:"flex",flexDirection:"row",marginTop:"20px"}}>       
-        <OutputTable firstPeriodPaid={inputState.firstPaidMonth} proRata={inputState.proRataThreshold} director={director} pay={inputState.pay * multiplier[inputState.payPeriod as keyof mult]} calculationType={inputState.calculationType} category = {inputState.category}/>
+        <OutputTable  proRata={inputState.proRataThreshold} director={director} pay={inputState.pay * multiplier[inputState.payPeriod as keyof mult]} calculationType={inputState.calculationType} category = {inputState.category}/>
         </Box>
         {/* </Fade> */}
       

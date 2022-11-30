@@ -1,7 +1,7 @@
 import {  Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
 import {currencyFormat,calculateNI,calculateAnnualCompanyNic,calculateAnnualDirectorEmployeeNic,calculateDirectorNic,calculateCompanyDirNic} from "./nationalInsurance"
 import { employeeRates,employerData,RatesType,directorRates,directorRatesByCategory,AnnualDirectorDataByCategory, AnnualDirectorData} from "./variables"
-export const OutputTable = ({director,pay,category,calculationType,proRata,firstPeriodPaid}:any): JSX.Element => {
+export const OutputTable = ({director,pay,category,calculationType,proRata,}:any): JSX.Element => {
  
    
   
@@ -17,29 +17,26 @@ if(!director) {
   } else {
     if (calculationType==="standard") {
         for (let i=0;i<months.length-1;i++) {   
-          const emp = calculateCompanyDirNic(pay*(Math.max(i+1-firstPeriodPaid,0)),rates,i<=6?"first_period":"second_period",i>0?rows.reduce((a,b)=>a+b['employer'],0):0,proRata)    
-          rows.push({"employee":calculateDirectorNic(pay*(Math.max(i+1-firstPeriodPaid,0)),rates,i<=6?"first_period":"second_period",i>0?rows.reduce((a,b)=>a+b['employee'],0):0,proRata), "employer":emp})
+          const emp = calculateCompanyDirNic(pay*(Math.max(i+1,0)),rates,i<=6?"first_period":"second_period",i>0?rows.reduce((a,b)=>a+b['employer'],0):0,proRata)    
+          rows.push({"employee":calculateDirectorNic(pay*(Math.max(i+1,0)),rates,i<=6?"first_period":"second_period",i>0?rows.reduce((a,b)=>a+b['employee'],0):0,proRata), "employer":emp})
     }
     //rows.push({"employee":calculateAnnualDirectorEmployeeNic(pay,directorRates), "employer":calculateAnnualDirectorCompanyNic(pay*12,directorRatesByCategory[category as keyof AnnualDirectorDataByCategory] )})
   } else {
     
     for (let i=0;i<months.length-2;i++) {  
      
-      if (i<firstPeriodPaid) {
-        rows.push({"employee":0,"employer":0})
-       
-      } else {
+  
       rows.push({"employee":calculateNI(pay,category,employeeRates,false,months[i]), "employer":calculateNI(pay,category,employerData,false,months[i])})
-      }
+      
     }
     let totDir = 0;
     let totComp = 0;
     for (let i=0;i<months.length-1;i++) {   
       
-      totComp+=calculateCompanyDirNic(pay*(Math.max(i+1-firstPeriodPaid,0)),rates,i<=6?"first_period":"second_period",i>0?totComp:0,proRata)    
-      totDir+=calculateDirectorNic(pay*(Math.max(i+1-firstPeriodPaid,0)),rates,i<=6?"first_period":"second_period",i>0?totDir:0,proRata)
+      totComp+=calculateCompanyDirNic(pay*(Math.max(i+1,0)),rates,i<=6?"first_period":"second_period",i>0?totComp:0,proRata)    
+      totDir+=calculateDirectorNic(pay*(Math.max(i+1,0)),rates,i<=6?"first_period":"second_period",i>0?totDir:0,proRata)
 }
-  console.log("tot dir ",totDir)
+
    
     //  rows.reduce((a,b)=>a+b['employee'],0)
     rows.push({"employee":totDir-rows.reduce((a,b)=>a+b['employee'],0),"employer":totComp-rows.reduce((a,b)=>a+b['employer'],0)})
@@ -56,6 +53,7 @@ if(!director) {
              <TableHead>
             <TableRow >
             <TableCell  style={{fontWeight:"bold",fontSize:"small"}} align="left">Month</TableCell> 
+            
             <TableCell style={{fontWeight:"bold",fontSize:"x-small"}} align="left">{director? "Director's NIC":"Employee's NIC"}</TableCell> 
             <TableCell style={{fontWeight:"bold",fontSize:"x-small"}} align="left">{"Employer's NIC"}</TableCell> 
             
