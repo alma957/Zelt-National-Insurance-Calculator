@@ -222,7 +222,7 @@ for (let i = 0; i < params_arr.length; i++) {
         <Select
         size="small"
           inputProps={{}}
-          input={<OutlinedInput label="First period paid" style={{marginLeft:"10px"}} />}
+          input={<OutlinedInput label=" First period salary received (in tax year)" style={{marginLeft:"10px"}} />}
           value={inputState.firstPaidMonth}
           style={{background: "white","width":"100%"}}
           onChange={e => {
