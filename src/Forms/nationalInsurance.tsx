@@ -46,7 +46,7 @@ export const NationalInsurance = (): JSX.Element => {
   const [director,setDirector] = useState<boolean>(false);
 
   useEffect(() => {
-  
+
     let url = document.URL
     if (url.indexOf("?")!==-1) {
     let paramString = document.URL.split('?')[1];
@@ -175,7 +175,7 @@ for (let i = 0; i < params_arr.length; i++) {
          onChange={(e)=>{
                
           const oneJan = new Date(2022,3,6);
-          const endTax = new Date(2022,3,5)
+          const endTax = new Date(2023,3,5)
        
           const date = new Date(Math.max(new Date(e.target.value).getTime(),oneJan.getTime()))
           
@@ -184,13 +184,14 @@ for (let i = 0; i < params_arr.length; i++) {
   
           inputState.directorshipStart = e.target.value
           inputState.proRataThreshold = Math.max((53-result)/52,0)
+          console.log("pro rata ",inputState.proRataThreshold)
           if (date.getTime()<=oneJan.getTime())
             inputState.firstPaidMonth = 0
           else if (date.getTime()>=endTax.getTime())
             inputState.firstPaidMonth = 13
           else 
-            inputState.firstPaidMonth = date.getMonth()
-   
+            inputState.firstPaidMonth = date.getMonth()-3>=0? date.getMonth()-3:12-date.getMonth()
+          
           setInputState({...inputState})
          }}
          value={inputState.directorshipStart}
@@ -250,7 +251,7 @@ for (let i = 0; i < params_arr.length; i++) {
       
         {/* <Fade in={director} unmountOnExit> */}
         <Box style={{display:"flex",flexDirection:"row",marginTop:"20px"}}>       
-        <OutputTable  proRata={inputState.proRataThreshold} director={director} pay={inputState.pay * multiplier[inputState.payPeriod as keyof mult]} calculationType={inputState.calculationType} category = {inputState.category}/>
+        <OutputTable firstPeriodPaid={inputState.firstPaidMonth}  proRata={inputState.proRataThreshold} director={director} pay={inputState.pay * multiplier[inputState.payPeriod as keyof mult]} calculationType={inputState.calculationType} category = {inputState.category}/>
         </Box>
         {/* </Fade> */}
       
@@ -402,8 +403,9 @@ export const calculateAnnualCompanyNic = (totPay:number,rates:AnnualDirectorData
 export const calculateCompanyDirNic = (totPay:number, rates:AnnualDirectorData,period:string,totPaid:number,proRata:number) => {
   const between_pay_st = Math.max((totPay - rates.secondary_threshold*proRata),0) 
 
+  
   let comp_amount = between_pay_st * rates.rates[period as keyof DirRates].secondary_threshold   
-
+  console.log("between  ",between_pay_st, " comp ",comp_amount, " rate ",rates.rates[period as keyof DirRates].secondary_threshold   )
   return (comp_amount - totPaid)
 
 
