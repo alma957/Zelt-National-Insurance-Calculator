@@ -181,8 +181,8 @@ for (let i = 0; i < params_arr.length; i++) {
             setInputState({...inputState});
           }}
         >
-          <MenuItem value="standard">Standard</MenuItem>
-          <MenuItem value="alternative">Alternative</MenuItem>
+          <MenuItem value="standard">Cumulative</MenuItem>
+          <MenuItem value="alternative">Employee</MenuItem>
           
           {/* <MenuItem value="alternative">Alternative</MenuItem> */}
           
