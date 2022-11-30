@@ -32,11 +32,11 @@ export interface BreakdownTable {
 }
 export const initialState: InputState = {
   validDate: true,
-  payPeriod: "monthly",
-  pay: 2500,
+  payPeriod: "annually",
+  pay: 60000,
   category: "A",
   calculationType:"standard",
-  directorshipStart:"2022-04-06",
+  directorshipStart:"2021-06-24",
   proRataThreshold:1,
   firstPaidMonth:0
 
