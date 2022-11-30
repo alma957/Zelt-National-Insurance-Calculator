@@ -175,7 +175,7 @@ for (let i = 0; i < params_arr.length; i++) {
          onChange={(e)=>{
                
           const oneJan = new Date(2022,3,6);
-          const endTax = new Date(2023,3,5)
+          const endTax = new Date(2023,2,31)
        
           const date = new Date(Math.max(new Date(e.target.value).getTime(),oneJan.getTime()))
           
@@ -190,7 +190,7 @@ for (let i = 0; i < params_arr.length; i++) {
           else if (date.getTime()>=endTax.getTime())
             inputState.firstPaidMonth = 13
           else 
-            inputState.firstPaidMonth = date.getMonth()-3>=0? date.getMonth()-3:12-date.getMonth()
+            inputState.firstPaidMonth = date.getMonth()-3>=0? date.getMonth()-3:date.getMonth()+9
           
           setInputState({...inputState})
          }}
@@ -405,7 +405,7 @@ export const calculateCompanyDirNic = (totPay:number, rates:AnnualDirectorData,p
 
   
   let comp_amount = between_pay_st * rates.rates[period as keyof DirRates].secondary_threshold   
-  console.log("between  ",between_pay_st, " comp ",comp_amount, " rate ",rates.rates[period as keyof DirRates].secondary_threshold   )
+  
   return (comp_amount - totPaid)
 
 

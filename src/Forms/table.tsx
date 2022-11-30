@@ -16,7 +16,7 @@ if(!director) {
     }
   } else {
     if (calculationType==="standard") {
-      console.log(firstPeriodPaid)
+
         for (let i=0;i<months.length-1;i++) {   
           
           const dir = calculateDirectorNic(pay*(Math.max(i+1-firstPeriodPaid,0)),rates,i<=6?"first_period":"second_period",i>0?rows.reduce((a,b)=>a+b['employee'],0):0,proRata)
@@ -43,8 +43,7 @@ if(!director) {
       totComp+=calculateCompanyDirNic(pay*(Math.max(i+1-firstPeriodPaid,0)),rates,i<=6?"first_period":"second_period",i>0?totComp:0,proRata)    
       totDir+=calculateDirectorNic(pay*(Math.max(i+1-firstPeriodPaid,0)),rates,i<=6?"first_period":"second_period",i>0?totDir:0,proRata)
 }
-  console.log("tot dir ",totDir)
-   
+ 
     //  rows.reduce((a,b)=>a+b['employee'],0)
     rows.push({"employee":totDir-rows.reduce((a,b)=>a+b['employee'],0),"employer":totComp-rows.reduce((a,b)=>a+b['employer'],0)})
     }
