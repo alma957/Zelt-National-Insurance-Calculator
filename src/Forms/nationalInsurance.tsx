@@ -184,7 +184,7 @@ for (let i = 0; i < params_arr.length; i++) {
   
           inputState.directorshipStart = e.target.value
           inputState.proRataThreshold = Math.max((53-result)/52,0)
-          console.log("pro rata ",inputState.proRataThreshold)
+       
           if (date.getTime()<=oneJan.getTime())
             inputState.firstPaidMonth = 0
           else if (date.getTime()>=endTax.getTime())
@@ -405,7 +405,7 @@ export const calculateCompanyDirNic = (totPay:number, rates:AnnualDirectorData,p
 
   
   let comp_amount = between_pay_st * rates.rates[period as keyof DirRates].secondary_threshold   
-  
+  console.log("comp amoun ",comp_amount, " between ",between_pay_st," pro rata ",proRata)
   return (comp_amount - totPaid)
 
 

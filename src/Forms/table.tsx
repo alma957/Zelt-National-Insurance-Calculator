@@ -21,7 +21,7 @@ if(!director) {
           
           const dir = calculateDirectorNic(pay*(Math.max(i+1-firstPeriodPaid,0)),rates,i<=6?"first_period":"second_period",i>0?rows.reduce((a,b)=>a+b['employee'],0):0,proRata)
           const emp = calculateCompanyDirNic(pay*(Math.max(i+1-firstPeriodPaid,0)),rates,i<=6?"first_period":"second_period",i>0?rows.reduce((a,b)=>a+b['employer'],0):0,proRata)    
-          console.log("month ", months[i], " contr ",dir, " first per " ,firstPeriodPaid, " i ",i," tot paid ",pay*(Math.max(i+1-firstPeriodPaid,0)))
+          console.log("month ", months[i], " contr ",emp, " first per " ,firstPeriodPaid, " i ",i," tot paid ",pay*(Math.max(i+1-firstPeriodPaid,0)))
           rows.push({"employee":dir, "employer":emp})
     }
     //rows.push({"employee":calculateAnnualDirectorEmployeeNic(pay,directorRates), "employer":calculateAnnualDirectorCompanyNic(pay*12,directorRatesByCategory[category as keyof AnnualDirectorDataByCategory] )})
