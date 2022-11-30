@@ -7,6 +7,7 @@ export interface InputState {
   directorshipStart:string;
   proRataThreshold:number;
   firstPaidMonth:number;
+
 }
 export const multiplier: mult = {
   annually: 1 / 12,
@@ -38,6 +39,7 @@ export const initialState: InputState = {
   directorshipStart:"2022-04-06",
   proRataThreshold:1,
   firstPaidMonth:0
+
 };
 export interface RatesType {
   firstPeriod: Array<Rates>;

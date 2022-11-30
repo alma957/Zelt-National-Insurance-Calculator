@@ -175,13 +175,21 @@ for (let i = 0; i < params_arr.length; i++) {
          onChange={(e)=>{
                
           const oneJan = new Date(2022,3,6);
+          const endTax = new Date(2022,3,5)
        
           const date = new Date(Math.max(new Date(e.target.value).getTime(),oneJan.getTime()))
+          
           const  numberOfDays = Math.floor((date.getTime() - oneJan.getTime()) / (24 * 60 * 60 * 1000));
           const result = Math.round(( date.getDay() + 1 + numberOfDays) / 7)
   
           inputState.directorshipStart = e.target.value
           inputState.proRataThreshold = Math.max((53-result)/52,0)
+          if (date.getTime()<=oneJan.getTime())
+            inputState.firstPaidMonth = 0
+          else if (date.getTime()>=endTax.getTime())
+            inputState.firstPaidMonth = 13
+          else 
+            inputState.firstPaidMonth = date.getMonth()
    
           setInputState({...inputState})
          }}
@@ -217,7 +225,6 @@ for (let i = 0; i < params_arr.length; i++) {
           
         </Select>
       </FormControl>
-        
 
       
       </Box>
